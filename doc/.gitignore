@@ -22,3 +22,4 @@ version.texi
 programmer_types.texi
 parts.texi
 programmers.texi
+*.t2d

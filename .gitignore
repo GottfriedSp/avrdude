@@ -1,5 +1,3 @@
-*.diff
-*.patch
 y.output
 y.tab.h
 lexer.c
@@ -30,3 +28,14 @@ config.log
 config.status
 config.sub
 avrdude
+----
+m4
+ylwrap
+ltmain.sh
+libtool
+.libs
+*.o
+*.lo
+*.la
+*.a
+*.exe
