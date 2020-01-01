@@ -5,7 +5,6 @@ y.tab.h
 lexer.c
 config_gram.c
 config_gram.h
-.cvsignore
 .depend
 .deps
 INSTALL
