@@ -116,7 +116,7 @@ static int wiring_parseextparms(PROGRAMMER * pgm, LISTID extparms)
   void *mycookie = STK500V2PDATA(pgm)->chained_pdata;
 
   for (ln = lfirst(extparms); ln; ln = lnext(ln)) {
-    extended_param = ldata(ln);
+    extended_param = static_cast<const char*>(ldata(ln));
 
     if (strncmp(extended_param, "snooze=", strlen("snooze=")) == 0) {
       int newsnooze;

@@ -137,7 +137,7 @@ static int buspirate_expect_bin(struct programmer_t *pgm,
 				unsigned char *send_data, size_t send_len,
 				unsigned char *expect_data, size_t expect_len)
 {
-	unsigned char *recv_buf = alloca(expect_len);
+	unsigned char *recv_buf = static_cast<unsigned char*>(alloca(expect_len));
 	if ((pgm->flag & BP_FLAG_IN_BINMODE) == 0) {
 		avrdude_message(MSG_INFO, "BusPirate: Internal error: buspirate_send_bin() called from ascii mode\n");
 		return -1;
@@ -304,7 +304,7 @@ buspirate_parseextparms(struct programmer_t *pgm, LISTID extparms)
 	int serial_recv_timeout;
 
 	for (ln = lfirst(extparms); ln; ln = lnext(ln)) {
-		extended_param = ldata(ln);
+		extended_param = static_cast<const char*>(ldata(ln));
 		if (strcmp(extended_param, "ascii") == 0) {
 			pgm->flag |= BP_FLAG_XPARM_FORCE_ASCII;
 			continue;
@@ -499,28 +499,33 @@ static int buspirate_start_mode_bin(struct programmer_t *pgm)
 		char config;  /* Command to setup submode parameters */
 	} *submode;
 
+  const struct submode submodule_raw =
+  {
+    .name = "Raw-wire",
+    .enter = 0x05,
+    .entered_format = "RAW%1d",
+    .config = static_cast<char>(0x8C),
+  };
+  const struct submode submodule_spi =
+  {
+    .name = "SPI",
+    .enter = 0x01,
+    .entered_format = "SPI%1d",
+
+    /* 1000wxyz - SPI config, w=HiZ(0)/3.3v(1), x=CLK idle, y=CLK edge, z=SMP sample
+     * we want: 3.3V(1), idle low(0), data change on
+     *          trailing edge (1), sample in the middle
+     *          of the pulse (0)
+     *       => 0b10001010 = 0x8a */
+    .config = static_cast<char>(0x8A),
+  };
+
 	if (pgm->flag & BP_FLAG_XPARM_RAWFREQ) {
-		submode = &(const struct submode){
-			.name = "Raw-wire",
-			.enter = 0x05,
-			.entered_format = "RAW%1d",
-			.config = 0x8C,
-		};
+		submode = &submodule_raw;
 		pgm->flag |= BP_FLAG_NOPAGEDWRITE;
 		pgm->flag |= BP_FLAG_NOPAGEDREAD;
 	} else {
-		submode = &(const struct submode){
-			.name = "SPI",
-			.enter = 0x01,
-			.entered_format = "SPI%1d",
-			
-			/* 1000wxyz - SPI config, w=HiZ(0)/3.3v(1), x=CLK idle, y=CLK edge, z=SMP sample
-			 * we want: 3.3V(1), idle low(0), data change on
-			 *          trailing edge (1), sample in the middle
-			 *          of the pulse (0)
-			 *       => 0b10001010 = 0x8a */
-			.config = 0x8A,
-		};
+		submode = &submodule_spi;
 	}
 
 	unsigned char buf[20] = { '\0' };

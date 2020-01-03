@@ -431,7 +431,7 @@ static int stk500v2_jtagmkII_send(PROGRAMMER * pgm, unsigned char * data, size_t
     sz = 3 + data[2];
   }
 
-  if ((cmdbuf = malloc(len + 3)) == NULL) {
+  if ((cmdbuf = static_cast<unsigned char*>(malloc(len + 3))) == NULL) {
     avrdude_message(MSG_INFO, "%s: out of memory for command packet\n",
             progname);
     exit(1);
@@ -458,7 +458,7 @@ static int stk500v2_jtag3_send(PROGRAMMER * pgm, unsigned char * data, size_t le
   int rv;
   void *mycookie;
 
-  if ((cmdbuf = malloc(len + 1)) == NULL) {
+  if ((cmdbuf = static_cast<unsigned char*>(malloc(len + 1))) == NULL) {
     avrdude_message(MSG_INFO, "%s: out of memory for command packet\n",
             progname);
     exit(1);
@@ -1283,7 +1283,7 @@ static int stk500v2_initialize(PROGRAMMER * pgm, AVRPART * p)
   PDATA(pgm)->flash_pagesize = 2;
   PDATA(pgm)->eeprom_pagesize = 1;
   for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     if (strcmp(m->desc, "flash") == 0) {
       if (m->page_size > 0) {
         if (m->page_size > 256)
@@ -1298,12 +1298,12 @@ static int stk500v2_initialize(PROGRAMMER * pgm, AVRPART * p)
   }
   free(PDATA(pgm)->flash_pagecache);
   free(PDATA(pgm)->eeprom_pagecache);
-  if ((PDATA(pgm)->flash_pagecache = malloc(PDATA(pgm)->flash_pagesize)) == NULL) {
+  if ((PDATA(pgm)->flash_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->flash_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500v2_initialize(): Out of memory\n",
 	    progname);
     return -1;
   }
-  if ((PDATA(pgm)->eeprom_pagecache = malloc(PDATA(pgm)->eeprom_pagesize)) == NULL) {
+  if ((PDATA(pgm)->eeprom_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->eeprom_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500v2_initialize(): Out of memory\n",
 	    progname);
     free(PDATA(pgm)->flash_pagecache);
@@ -1382,7 +1382,7 @@ static int stk500v2_jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
   PDATA(pgm)->flash_pagesize = 2;
   PDATA(pgm)->eeprom_pagesize = 1;
   for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     if (strcmp(m->desc, "flash") == 0) {
       if (m->page_size > 0) {
         if (m->page_size > 256)
@@ -1397,12 +1397,12 @@ static int stk500v2_jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
   }
   free(PDATA(pgm)->flash_pagecache);
   free(PDATA(pgm)->eeprom_pagecache);
-  if ((PDATA(pgm)->flash_pagecache = malloc(PDATA(pgm)->flash_pagesize)) == NULL) {
+  if ((PDATA(pgm)->flash_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->flash_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500hv_initialize(): Out of memory\n",
 	    progname);
     return -1;
   }
-  if ((PDATA(pgm)->eeprom_pagecache = malloc(PDATA(pgm)->eeprom_pagesize)) == NULL) {
+  if ((PDATA(pgm)->eeprom_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->eeprom_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500hv_initialize(): Out of memory\n",
 	    progname);
     free(PDATA(pgm)->flash_pagecache);
@@ -1453,7 +1453,7 @@ static int stk500hv_initialize(PROGRAMMER * pgm, AVRPART * p, enum hvmode mode)
   PDATA(pgm)->flash_pagesize = 2;
   PDATA(pgm)->eeprom_pagesize = 1;
   for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     if (strcmp(m->desc, "flash") == 0) {
       if (m->page_size > 0) {
         if (m->page_size > 256)
@@ -1468,12 +1468,12 @@ static int stk500hv_initialize(PROGRAMMER * pgm, AVRPART * p, enum hvmode mode)
   }
   free(PDATA(pgm)->flash_pagecache);
   free(PDATA(pgm)->eeprom_pagecache);
-  if ((PDATA(pgm)->flash_pagecache = malloc(PDATA(pgm)->flash_pagesize)) == NULL) {
+  if ((PDATA(pgm)->flash_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->flash_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500hv_initialize(): Out of memory\n",
 	    progname);
     return -1;
   }
-  if ((PDATA(pgm)->eeprom_pagecache = malloc(PDATA(pgm)->eeprom_pagesize)) == NULL) {
+  if ((PDATA(pgm)->eeprom_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->eeprom_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: stk500hv_initialize(): Out of memory\n",
 	    progname);
     free(PDATA(pgm)->flash_pagecache);
@@ -3680,7 +3680,7 @@ static int stk600_xprog_command(PROGRAMMER * pgm, unsigned char *b,
     else
         s = cmdsize;
 
-    if ((newb = malloc(s + 1)) == 0) {
+    if ((newb = static_cast<unsigned char*>(malloc(s + 1))) == 0) {
         avrdude_message(MSG_INFO, "%s: stk600_xprog_cmd(): out of memory\n",
                 progname);
         return -1;
@@ -4012,7 +4012,7 @@ static int stk600_xprog_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
     offset = addr;
     addr += mem->offset;
 
-    if ((b = malloc(page_size + 2)) == NULL) {
+    if ((b = static_cast<unsigned char*>(malloc(page_size + 2))) == NULL) {
 	avrdude_message(MSG_INFO, "%s: stk600_xprog_paged_load(): out of memory\n",
                         progname);
         return -1;
@@ -4126,7 +4126,7 @@ static int stk600_xprog_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
     offset = addr;
     addr += mem->offset;
 
-    if ((b = malloc(page_size + 9)) == NULL) {
+    if ((b = static_cast<unsigned char*>(malloc(page_size + 9))) == NULL) {
 	avrdude_message(MSG_INFO, "%s: stk600_xprog_paged_write(): out of memory\n",
                         progname);
         return -1;

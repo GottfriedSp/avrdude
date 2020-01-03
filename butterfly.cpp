@@ -224,11 +224,11 @@ static int butterfly_initialize(PROGRAMMER * pgm, AVRPART * p)
   avrdude_message(MSG_INFO, "Connecting to programmer: ");
   if (pgm->flag & IS_BUTTERFLY_MK)
     {
-      char mk_reset_cmd[6] = {"#aR@S\r"};
+      char mk_reset_cmd[7] = {"#aR@S\r"};
       unsigned char mk_timeout = 0;
 
       putc('.', stderr);
-      butterfly_send(pgm, mk_reset_cmd, sizeof(mk_reset_cmd));
+      butterfly_send(pgm, mk_reset_cmd, sizeof(mk_reset_cmd) - 1);
       usleep(20000); 
 
       do
@@ -619,7 +619,7 @@ static int butterfly_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     return -1;
 #endif
 
-  cmd = malloc(4+blocksize);
+  cmd = static_cast<char*>(malloc(4+blocksize));
   if (!cmd) return -1;
   cmd[0] = 'B';
   cmd[3] = toupper((int)(m->desc[0]));

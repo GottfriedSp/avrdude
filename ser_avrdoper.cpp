@@ -546,6 +546,7 @@ static int avrdoper_set_dtr_rts(union filedescriptor *fdp, int is_on)
 struct serial_device avrdoper_serdev =
 {
   .open = avrdoper_open,
+  .setspeed = 0,
   .close = avrdoper_close,
   .send = avrdoper_send,
   .recv = avrdoper_recv,

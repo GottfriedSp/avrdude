@@ -424,7 +424,7 @@ int flip1_read_byte(PROGRAMMER* pgm, AVRPART *part, AVRMEM *mem,
 
   if (mem_unit == FLIP1_MEM_UNIT_EEPROM)
     /* 0x01 is used for blank check when reading, 0x02 is EEPROM */
-    mem_unit = 2;
+    mem_unit = static_cast<enum flip1_mem_unit>(2);
 
   return flip1_read_memory(pgm, mem_unit, addr, value, 1);
 }
@@ -470,7 +470,7 @@ int flip1_paged_load(PROGRAMMER* pgm, AVRPART *part, AVRMEM *mem,
 
   if (mem_unit == FLIP1_MEM_UNIT_EEPROM)
     /* 0x01 is used for blank check when reading, 0x02 is EEPROM */
-    mem_unit = 2;
+    mem_unit = static_cast<enum flip1_mem_unit>(2);
 
   return flip1_read_memory(pgm, mem_unit, addr, mem->buf + addr, n_bytes);
 }
@@ -732,9 +732,9 @@ int flip1_write_memory(struct dfu_dev *dfu,
     write_size = size;
   }
 
-  if ((buf = malloc(sizeof(struct flip1_cmd_header) +
+  if ((buf = static_cast<unsigned char*>(malloc(sizeof(struct flip1_cmd_header) +
                     write_size +
-                    sizeof(struct flip1_prog_footer))) == 0) {
+                    sizeof(struct flip1_prog_footer)))) == 0) {
     avrdude_message(MSG_INFO, "%s: Out of memory\n", progname);
     return -1;
   }

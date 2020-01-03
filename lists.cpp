@@ -424,7 +424,7 @@ lcreat ( void * liststruct, int elements )
     /*-----------------------------------------------------------------
       use the memory given to us for the list structure
       -----------------------------------------------------------------*/
-    l = liststruct;
+    l = static_cast<LIST*>(liststruct);
     l->free_on_close = 0;
   }
 
@@ -1392,7 +1392,7 @@ int lprint ( FILE * f, LISTID lid )
                 0
 #endif
         );
-      ln = lnext(ln);
+      ln = static_cast<LISTNODE*>(lnext(ln));
     }
     if (count != l->num) {
       fprintf ( f, 

@@ -339,7 +339,7 @@ int main(int argc, char * argv [])
   int     init_ok;     /* Device initialization worked well */
   int     is_open;     /* Device open succeeded */
   char  * logfile;     /* Use logfile rather than stderr for diagnostics */
-  enum updateflags uflags = UF_AUTO_ERASE; /* Flags for do_op() */
+  int     uflags = UF_AUTO_ERASE; /* Flags for do_op() */
   unsigned char safemode_lfuse = 0xff;
   unsigned char safemode_hfuse = 0xff;
   unsigned char safemode_efuse = 0xff;
@@ -717,7 +717,7 @@ int main(int argc, char * argv [])
     const char * p = NULL;
 
     for (ln1=lfirst(additional_config_files); ln1; ln1=lnext(ln1)) {
-      p = ldata(ln1);
+      p = static_cast<const char*>(ldata(ln1));
       avrdude_message(MSG_NOTICE, "%sAdditional configuration file is \"%s\"\n",
                       progbuf, p);
 
@@ -900,8 +900,8 @@ int main(int argc, char * argv [])
    * device-dependent default region name, either "application" (for
    * Xmega devices), or "flash" (everything else).
    */
-  for (ln=lfirst(updates); ln; ln=lnext(ln)) {
-    upd = ldata(ln);
+  for (ln=static_cast<LNODEID*>(lfirst(updates)); ln; ln=static_cast<LNODEID*>(lnext(ln))) {
+    upd = static_cast<UPDATE*>(ldata(ln));
     if (upd->memtype == NULL) {
       const char *mtype = (p->flags & AVRPART_HAS_PDI)? "application": "flash";
       avrdude_message(MSG_NOTICE2, "%s: defaulting memtype in -U %c:%s option to \"%s\"\n",
@@ -1207,8 +1207,8 @@ int main(int argc, char * argv [])
       const char *memname = (p->flags & AVRPART_HAS_PDI)? "application": "flash";
 
       uflags &= ~UF_AUTO_ERASE;
-      for (ln=lfirst(updates); ln; ln=lnext(ln)) {
-        upd = ldata(ln);
+      for (ln=static_cast<LNODEID*>(lfirst(updates)); ln; ln=static_cast<LNODEID*>(lnext(ln))) {
+        upd = static_cast<UPDATE*>(ldata(ln));
         m = avr_locate_mem(p, upd->memtype);
         if (m == NULL)
           continue;
@@ -1259,9 +1259,9 @@ int main(int argc, char * argv [])
   }
 
 
-  for (ln=lfirst(updates); ln; ln=lnext(ln)) {
-    upd = ldata(ln);
-    rc = do_op(pgm, p, upd, uflags);
+  for (ln=static_cast<LNODEID*>(lfirst(updates)); ln; ln=static_cast<LNODEID*>(lnext(ln))) {
+    upd = static_cast<UPDATE*>(ldata(ln));
+    rc = do_op(pgm, p, upd, static_cast<updateflags>(uflags));
     if (rc) {
       exitrc = 1;
       break;

@@ -324,7 +324,7 @@ static int avr910_parseextparms(PROGRAMMER * pgm, LISTID extparms)
   int rv = 0;
 
   for (ln = lfirst(extparms); ln; ln = lnext(ln)) {
-    extended_param = ldata(ln);
+    extended_param = static_cast<const char*>(ldata(ln));
 
     if (strncmp(extended_param, "devcode=", strlen("devcode=")) == 0) {
       int devcode;
@@ -613,7 +613,7 @@ static int avr910_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
     avr910_set_addr(pgm, addr / wr_size);
 
-    cmd = malloc(4 + blocksize);
+    cmd = static_cast<char*>(malloc(4 + blocksize));
     if (!cmd) return -1;
      
     cmd[0] = 'B';

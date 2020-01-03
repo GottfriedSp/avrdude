@@ -648,7 +648,8 @@ static int avrftdi_pin_setup(PROGRAMMER * pgm)
 
 static int avrftdi_open(PROGRAMMER * pgm, char *port)
 {
-	int vid, pid, interface, index, err;
+	int vid, pid, index, err;
+  ftdi_interface interface;
 	char * serial, *desc;
 	
 	avrftdi_t* pdata = to_pdata(pgm);

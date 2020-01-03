@@ -240,7 +240,7 @@ static int ser_open(char * port, union pinfo pinfo, union filedescriptor *fdp)
 	if (strncasecmp(port, "com", strlen("com")) == 0) {
 
 	    // prepend "\\\\.\\" to name, required for port # >= 10
-	    newname = malloc(strlen("\\\\.\\") + strlen(port) + 1);
+	    newname = static_cast<char*>(malloc(strlen("\\\\.\\") + strlen(port) + 1));
 
 	    if (newname == 0) {
 		avrdude_message(MSG_INFO, "%s: ser_open(): out of memory\n",
@@ -374,7 +374,7 @@ static int net_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 	}
 
 	while (len) {
-		rc = send(fd->ifd, p, (len > 1024) ? 1024 : len, 0);
+		rc = send(fd->ifd, reinterpret_cast<const char*>(p), (len > 1024) ? 1024 : len, 0);
 		if (rc < 0) {
 			FormatMessage(
 				FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -464,7 +464,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 static int net_recv(union filedescriptor *fd, unsigned char * buf, size_t buflen)
 {
 	LPVOID lpMsgBuf;
-	struct timeval timeout, to2;
+	TIMEVAL timeout, to2;
 	fd_set rfds;
 	int nfds;
 	int rc;
@@ -512,7 +512,7 @@ reselect:
 			}
 		}
 
-		rc = recv(fd->ifd, p, (buflen - len > 1024) ? 1024 : buflen - len, 0);
+		rc = recv(fd->ifd, (char*)p, (buflen - len > 1024) ? 1024 : buflen - len, 0);
 		if (rc < 0) {
 			FormatMessage(
 				FORMAT_MESSAGE_ALLOCATE_BUFFER |

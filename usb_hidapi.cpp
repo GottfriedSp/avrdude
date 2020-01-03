@@ -346,10 +346,12 @@ static int usbhid_drain(union filedescriptor *fd, int display)
 struct serial_device usbhid_serdev =
 {
   .open = usbhid_open,
+  .setspeed = 0,
   .close = usbhid_close,
   .send = usbhid_send,
   .recv = usbhid_recv,
   .drain = usbhid_drain,
+  .set_dtr_rts = 0,
   .flags = SERDEV_FL_NONE,
 };
 

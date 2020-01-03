@@ -432,6 +432,10 @@ struct pin_checklist_t {
   const struct pindef_t* valid_pins; ///< mask defines allowed pins, inverse define is they might be used inverted
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Adds a pin in the pin definition as normal or inverse pin.
  *
@@ -447,6 +451,10 @@ void pin_set_value(struct pindef_t * const pindef, const int pin, const bool inv
  * @param[out] pindef pin definition to clear
  */
 void pin_clear_all(struct pindef_t * const pindef);
+
+#ifdef __cplusplus
+}
+#endif
 
 struct programmer_t; /* forward declaration */
 

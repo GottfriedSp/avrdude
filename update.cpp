@@ -251,7 +251,7 @@ int do_op(PROGRAMMER * pgm, struct avrpart * p, UPDATE * upd, enum updateflags f
                       progname,
                       strcmp(upd->filename, "-")==0 ? "<stdout>" : upd->filename);
     }
-    rc = fileio(FIO_WRITE, upd->filename, upd->format, p, upd->memtype, size);
+    rc = fileio(FIO_WRITE, upd->filename, static_cast<FILEFMT>(upd->format), p, upd->memtype, size);
     if (rc < 0) {
       avrdude_message(MSG_INFO, "%s: write to file '%s' failed\n",
               progname, upd->filename);
@@ -268,7 +268,7 @@ int do_op(PROGRAMMER * pgm, struct avrpart * p, UPDATE * upd, enum updateflags f
                       progname,
                       strcmp(upd->filename, "-")==0 ? "<stdin>" : upd->filename);
     }
-    rc = fileio(FIO_READ, upd->filename, upd->format, p, upd->memtype, -1);
+    rc = fileio(FIO_READ, upd->filename, static_cast<FILEFMT>(upd->format), p, upd->memtype, -1);
     if (rc < 0) {
       avrdude_message(MSG_INFO, "%s: read from file '%s' failed\n",
               progname, upd->filename);
@@ -326,7 +326,7 @@ int do_op(PROGRAMMER * pgm, struct avrpart * p, UPDATE * upd, enum updateflags f
             progname, mem->desc, upd->filename);
     }
 
-    rc = fileio(FIO_READ, upd->filename, upd->format, p, upd->memtype, -1);
+    rc = fileio(FIO_READ, upd->filename, static_cast<FILEFMT>(upd->format), p, upd->memtype, -1);
     if (rc < 0) {
       avrdude_message(MSG_INFO, "%s: read from file '%s' failed\n",
               progname, upd->filename);

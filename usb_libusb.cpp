@@ -591,10 +591,12 @@ static int usbdev_drain(union filedescriptor *fd, int display)
 struct serial_device usb_serdev =
 {
   .open = usbdev_open,
+  .setspeed = 0,
   .close = usbdev_close,
   .send = usbdev_send,
   .recv = usbdev_recv,
   .drain = usbdev_drain,
+  .set_dtr_rts = 0,
   .flags = SERDEV_FL_NONE,
 };
 
@@ -604,10 +606,12 @@ struct serial_device usb_serdev =
 struct serial_device usb_serdev_frame =
 {
   .open = usbdev_open,
+  .setspeed = 0,
   .close = usbdev_close,
   .send = usbdev_send,
   .recv = usbdev_recv_frame,
   .drain = usbdev_drain,
+  .set_dtr_rts = 0,
   .flags = SERDEV_FL_NONE,
 };
 

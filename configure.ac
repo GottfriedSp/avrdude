@@ -25,7 +25,7 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AC_CONFIG_SRCDIR([main.c])
+AC_CONFIG_SRCDIR([main.cpp])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS(ac_cfg.h)
 AC_CONFIG_MACRO_DIR([m4])
@@ -36,6 +36,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_SED
 AC_PROG_YACC
@@ -417,6 +418,7 @@ if test "$GCC" = yes; then
 	AC_MSG_CHECKING([if gcc accepts -Wno-pointer-sign ])
 
 	safe_CFLAGS=$CFLAGS
+  safe_CXXFLAGS=$CXXFLAGS
 	CFLAGS="$ENABLE_WARNINGS -Wno-pointer-sign"
 
 	AC_TRY_COMPILE(, [ int main () { return 0 ; } ], [
@@ -427,6 +429,7 @@ if test "$GCC" = yes; then
 		AC_MSG_RESULT([no]) 
 		])
 	CFLAGS=$safe_CFLAGS
+  CXXFLAGS=$save_CXXFLAGS
 
 	if test x$no_pointer_sign = xyes; then
 		ENABLE_WARNINGS="$ENABLE_WARNINGS -Wno-pointer-sign"
@@ -483,6 +486,7 @@ case $target in
 
 		WINDOWS_DIRS="windows"
 		CFLAGS="${CFLAGS} -DWIN32NATIVE"
+		CXXFLAGS="${CXXFLAGS} -DWIN32NATIVE"
 		;;
 esac
 AC_SUBST(WINDOWS_DIRS,$WINDOWS_DIRS)

@@ -268,7 +268,7 @@ int avr_initmem(AVRPART * p)
   AVRMEM * m;
 
   for (ln=lfirst(p->mem); ln; ln=lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     m->buf = (unsigned char *) malloc(m->size);
     if (m->buf == NULL) {
       avrdude_message(MSG_INFO, "%s: can't alloc buffer for %s size of %d bytes\n",
@@ -356,7 +356,7 @@ AVRMEM * avr_locate_mem(AVRPART * p, char * desc)
   matches = 0;
   match = NULL;
   for (ln=lfirst(p->mem); ln; ln=lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     if (strncmp(desc, m->desc, l) == 0) {
       match = m;
       matches++;
@@ -478,7 +478,7 @@ AVRPART * avr_dup_part(AVRPART * d)
   p->mem = save;
 
   for (ln=lfirst(d->mem); ln; ln=lnext(ln)) {
-    ladd(p->mem, avr_dup_mem(ldata(ln)));
+    ladd(p->mem, avr_dup_mem(static_cast<AVRMEM*>(ldata(ln))));
   }
 
   for (i = 0; i < AVR_OP_MAX; i++) {
@@ -513,7 +513,7 @@ AVRPART * locate_part(LISTID parts, char * partdesc)
   found = 0;
 
   for (ln1=lfirst(parts); ln1 && !found; ln1=lnext(ln1)) {
-    p = ldata(ln1);
+    p = static_cast<AVRPART*>(ldata(ln1));
     if ((strcasecmp(partdesc, p->id) == 0) ||
         (strcasecmp(partdesc, p->desc) == 0))
       found = 1;
@@ -531,7 +531,7 @@ AVRPART * locate_part_by_avr910_devcode(LISTID parts, int devcode)
   AVRPART * p = NULL;
 
   for (ln1=lfirst(parts); ln1; ln1=lnext(ln1)) {
-    p = ldata(ln1);
+    p = static_cast<AVRPART*>(ldata(ln1));
     if (p->avr910_devcode == devcode)
       return p;
   }
@@ -548,7 +548,7 @@ AVRPART * locate_part_by_signature(LISTID parts, unsigned char * sig,
 
   if (sigsize == 3) {
     for (ln1=lfirst(parts); ln1; ln1=lnext(ln1)) {
-      p = ldata(ln1);
+      p = static_cast<AVRPART*>(ldata(ln1));
       for (i=0; i<3; i++)
         if (p->signature[i] != sig[i])
           break;
@@ -576,7 +576,7 @@ void walk_avrparts(LISTID avrparts, walk_avrparts_cb cb, void *cookie)
   AVRPART * p;
 
   for (ln1 = lfirst(avrparts); ln1; ln1 = lnext(ln1)) {
-    p = ldata(ln1);
+    p = static_cast<AVRPART*>(ldata(ln1));
     cb(p->id, p->desc, p->config_file, p->lineno, cookie);
   }
 }
@@ -670,7 +670,7 @@ void avr_display(FILE * f, AVRPART * p, const char * prefix, int verbose)
     avr_mem_display(px, f, NULL, 0, verbose);
   }
   for (ln=lfirst(p->mem); ln; ln=lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     avr_mem_display(px, f, m, i, verbose);
   }
 

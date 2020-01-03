@@ -30,6 +30,7 @@
 
 #include "avrdude.h"
 #include "libavrdude.h"
+#include "linuxgpio.h"
 
 #include "bitbang.h"
 

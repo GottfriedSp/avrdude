@@ -420,7 +420,7 @@ static int stk500_initialize(PROGRAMMER * pgm, AVRPART * p)
   stk500_getparm(pgm, Parm_STK_SW_MINOR, &min);
 
   // MIB510 does not need extparams
-  if (strcmp(ldata(lfirst(pgm->id)), "mib510") == 0)
+  if (strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0)
     n_extparms = 0;
   else if ((maj > 1) || ((maj == 1) && (min > 10)))
     n_extparms = 4;
@@ -667,7 +667,7 @@ static int stk500_open(PROGRAMMER * pgm, char * port)
   stk500_drain(pgm, 0);
 
   // MIB510 init
-  if (strcmp(ldata(lfirst(pgm->id)), "mib510") == 0 &&
+  if (strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0 &&
       mib510_isp(pgm, 1) != 0)
     return -1;
 
@@ -681,7 +681,7 @@ static int stk500_open(PROGRAMMER * pgm, char * port)
 static void stk500_close(PROGRAMMER * pgm)
 {
   // MIB510 close
-  if (strcmp(ldata(lfirst(pgm->id)), "mib510") == 0)
+  if (strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0)
     (void)mib510_isp(pgm, 0);
 
   serial_close(&pgm->fd);
@@ -792,7 +792,7 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
   for (; addr < n; addr += block_size) {
     // MIB510 uses fixed blocks size of 256 bytes
-    if (strcmp(ldata(lfirst(pgm->id)), "mib510") == 0) {
+    if (strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0) {
       block_size = 256;
     } else {
       if (n - addr < page_size)
@@ -878,7 +878,7 @@ static int stk500_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
   n = addr + n_bytes;
   for (; addr < n; addr += block_size) {
     // MIB510 uses fixed blocks size of 256 bytes
-    if (strcmp(ldata(lfirst(pgm->id)), "mib510") == 0) {
+    if (strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0) {
       block_size = 256;
     } else {
       if (n - addr < page_size)
@@ -923,7 +923,7 @@ static int stk500_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     if (stk500_recv(pgm, buf, 1) < 0)
       return -1;
 
-    if(strcmp(ldata(lfirst(pgm->id)), "mib510") == 0) {
+    if(strcmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "mib510") == 0) {
       if (buf[0] != Resp_STK_INSYNC) {
       avrdude_message(MSG_INFO, "\n%s: stk500_paged_load(): (a) protocol error, "
                       "expect=0x%02x, resp=0x%02x\n",

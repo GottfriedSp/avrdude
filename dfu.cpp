@@ -133,7 +133,7 @@ struct dfu_dev * dfu_open(char *port_spec)
    * strings for use in dfu_initialize().
    */
 
-  dfu = calloc(1, sizeof(struct dfu_dev));
+  dfu = static_cast<dfu_dev*>(calloc(1, sizeof(struct dfu_dev)));
 
   if (dfu == NULL)
   {
@@ -356,7 +356,7 @@ int dfu_dnload(struct dfu_dev *dfu, void *ptr, int size)
 
   result = usb_control_msg(dfu->dev_handle,
     USB_TYPE_CLASS | USB_RECIP_INTERFACE, DFU_DNLOAD, wIndex++, 0,
-    ptr, size, dfu->timeout);
+    static_cast<char*>(ptr), size, dfu->timeout);
 
   if (result < 0) {
     avrdude_message(MSG_INFO, "%s: Error: DFU_DNLOAD failed: %s\n",
@@ -388,7 +388,7 @@ int dfu_upload(struct dfu_dev *dfu, void *ptr, int size)
 
   result = usb_control_msg(dfu->dev_handle,
     0x80 | USB_TYPE_CLASS | USB_RECIP_INTERFACE, DFU_UPLOAD, wIndex++, 0,
-    ptr, size, dfu->timeout);
+    static_cast<char*>(ptr), size, dfu->timeout);
 
   if (result < 0) {
     avrdude_message(MSG_INFO, "%s: Error: DFU_UPLOAD failed: %s\n",
@@ -455,7 +455,7 @@ char * get_usb_string(usb_dev_handle * dev_handle, int index) {
     return NULL;
   }
 
-  str = malloc(result+1);
+  str = static_cast<char*>(malloc(result+1));
 
   if (str == NULL) {
     avrdude_message(MSG_INFO, "%s: Out of memory allocating a string\n", progname);

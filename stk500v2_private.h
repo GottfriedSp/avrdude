@@ -284,6 +284,17 @@
 /*
  * Private data for this programmer.
  */
+typedef enum
+{
+  PGMTYPE_UNKNOWN,
+  PGMTYPE_STK500,
+  PGMTYPE_AVRISP,
+  PGMTYPE_AVRISP_MKII,
+  PGMTYPE_JTAGICE_MKII,
+  PGMTYPE_STK600,
+  PGMTYPE_JTAGICE3
+}STK500v2_PGMTYPE;
+
 struct pdata
 {
   /*
@@ -300,17 +311,7 @@ struct pdata
 
   unsigned char command_sequence;
 
-    enum
-    {
-        PGMTYPE_UNKNOWN,
-        PGMTYPE_STK500,
-        PGMTYPE_AVRISP,
-        PGMTYPE_AVRISP_MKII,
-        PGMTYPE_JTAGICE_MKII,
-        PGMTYPE_STK600,
-        PGMTYPE_JTAGICE3
-    }
-        pgmtype;
+  STK500v2_PGMTYPE pgmtype;
 
   AVRPART *lastpart;
 

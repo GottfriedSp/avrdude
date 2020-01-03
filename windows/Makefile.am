@@ -27,13 +27,13 @@ local_install_list = \
 	status_giveio.bat
 
 EXTRA_DIST   = \
-	giveio.c \
+	giveio.cpp \
 	$(local_install_list)
 
 bin_PROGRAMS = loaddrv
 
 loaddrv_SOURCES = \
-	loaddrv.c \
+	loaddrv.cpp \
 	loaddrv.h
 
 install-exec-local:

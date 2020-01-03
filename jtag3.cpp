@@ -408,7 +408,7 @@ int jtag3_send(PROGRAMMER * pgm, unsigned char * data, size_t len)
   avrdude_message(MSG_DEBUG, "\n%s: jtag3_send(): sending %lu bytes\n",
 	    progname, (unsigned long)len);
 
-  if ((buf = malloc(len + 4)) == NULL)
+  if ((buf = static_cast<unsigned char*>(malloc(len + 4))) == NULL)
     {
       avrdude_message(MSG_INFO, "%s: jtag3_send(): out of memory",
 	      progname);
@@ -647,7 +647,7 @@ static int jtag3_recv_frame(PROGRAMMER * pgm, unsigned char **msg) {
 
   avrdude_message(MSG_TRACE, "%s: jtag3_recv():\n", progname);
 
-  if ((buf = malloc(pgm->fd.usb.max_xfer)) == NULL) {
+  if ((buf = static_cast<unsigned char*>(malloc(pgm->fd.usb.max_xfer))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_recv(): out of memory\n",
 	    progname);
     return -1;
@@ -677,12 +677,12 @@ static int jtag3_edbg_recv_frame(PROGRAMMER * pgm, unsigned char **msg) {
 
   avrdude_message(MSG_TRACE, "%s: jtag3_edbg_recv():\n", progname);
 
-  if ((buf = malloc(USBDEV_MAX_XFER_3)) == NULL) {
+  if ((buf = static_cast<unsigned char*>(malloc(USBDEV_MAX_XFER_3))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_edbg_recv(): out of memory\n",
 	    progname);
     return -1;
   }
-  if ((request = malloc(pgm->fd.usb.max_xfer)) == NULL) {
+  if ((request = static_cast<unsigned char*>(malloc(pgm->fd.usb.max_xfer))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_edbg_recv(): out of memory\n",
 	    progname);
     free(buf);
@@ -866,7 +866,7 @@ int jtag3_getsync(PROGRAMMER * pgm, int mode) {
   /* XplainedMini boards do not need this, and early revisions had a
    * firmware bug where they complained about it. */
   if (pgm->flag & PGM_FL_IS_EDBG) {
-    if (strcmp(pgm->id, "xplainedmini_updi") != 0) {
+    if (strcmp(static_cast<const char*>(pgm->id), "xplainedmini_updi") != 0) {
       if (jtag3_edbg_prepare(pgm) < 0) {
         return -1;
       }
@@ -1132,7 +1132,7 @@ static int jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
     u16_to_b2(xd.mcu_base_addr, p->mcu_base);
 
     for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-      m = ldata(ln);
+      m = static_cast<AVRMEM*>(ldata(ln));
       if (strcmp(m->desc, "flash") == 0) {
 	if (m->readsize != 0 && m->readsize < m->page_size)
 	  PDATA(pgm)->flash_pagesize = m->readsize;
@@ -1177,7 +1177,7 @@ static int jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
 
     for (ln = lfirst(p->mem); ln; ln = lnext(ln))
     {
-      m = ldata(ln);
+      m = static_cast<AVRMEM*>(ldata(ln));
       if (strcmp(m->desc, "flash") == 0)
       {
         u16_to_b2(xd.prog_base, m->offset);
@@ -1220,7 +1220,7 @@ static int jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
     memset(&md, 0, sizeof md);
 
     for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-      m = ldata(ln);
+      m = static_cast<AVRMEM*>(ldata(ln));
       if (strcmp(m->desc, "flash") == 0) {
 	if (m->readsize != 0 && m->readsize < m->page_size)
 	  PDATA(pgm)->flash_pagesize = m->readsize;
@@ -1335,12 +1335,12 @@ static int jtag3_initialize(PROGRAMMER * pgm, AVRPART * p)
 
   free(PDATA(pgm)->flash_pagecache);
   free(PDATA(pgm)->eeprom_pagecache);
-  if ((PDATA(pgm)->flash_pagecache = malloc(PDATA(pgm)->flash_pagesize)) == NULL) {
+  if ((PDATA(pgm)->flash_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->flash_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_initialize(): Out of memory\n",
 	    progname);
     return -1;
   }
-  if ((PDATA(pgm)->eeprom_pagecache = malloc(PDATA(pgm)->eeprom_pagesize)) == NULL) {
+  if ((PDATA(pgm)->eeprom_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->eeprom_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_initialize(): Out of memory\n",
 	    progname);
     free(PDATA(pgm)->flash_pagecache);
@@ -1379,7 +1379,7 @@ static int jtag3_parseextparms(PROGRAMMER * pgm, LISTID extparms)
   int rv = 0;
 
   for (ln = lfirst(extparms); ln; ln = lnext(ln)) {
-    extended_param = ldata(ln);
+    extended_param = static_cast<const char*>(ldata(ln));
 
     if (strncmp(extended_param, "jtagchain=", strlen("jtagchain=")) == 0) {
       unsigned int ub, ua, bb, ba;
@@ -1580,7 +1580,7 @@ void jtag3_close(PROGRAMMER * pgm)
   /* XplainedMini boards do not need this, and early revisions had a
    * firmware bug where they complained about it. */
   if (pgm->flag & PGM_FL_IS_EDBG) {
-    if (strcmp(pgm->id, "xplainedmini_updi") != 0) {
+    if (strcmp(static_cast<char*>(pgm->id), "xplainedmini_updi") != 0) {
       jtag3_edbg_signoff(pgm);
     }
   }
@@ -1658,7 +1658,7 @@ static int jtag3_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
   if (page_size == 0) page_size = 256;
 
-  if ((cmd = malloc(page_size + 13)) == NULL) {
+  if ((cmd = static_cast<unsigned char*>(malloc(page_size + 13))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtag3_paged_write(): Out of memory\n",
 	    progname);
     return -1;
@@ -2188,7 +2188,7 @@ int jtag3_setparm(PROGRAMMER * pgm, unsigned char scope,
   sprintf(descr, "set parameter (scope 0x%02x, section %d, parm %d)",
 	  scope, section, parm);
 
-  if ((buf = malloc(6 + length)) == NULL)
+  if ((buf = static_cast<unsigned char*>(malloc(6 + length))) == NULL)
   {
     avrdude_message(MSG_INFO, "%s: jtag3_setparm(): Out of memory\n",
 	    progname);

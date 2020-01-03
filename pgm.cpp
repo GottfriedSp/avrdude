@@ -169,7 +169,7 @@ PROGRAMMER * pgm_dup(const PROGRAMMER * const src)
   pgm->usbpid = lcreat(NULL, 0);
 
   for (ln = lfirst(src->usbpid); ln; ln = lnext(ln)) {
-    int *ip = malloc(sizeof(int));
+    int *ip = static_cast<int*>(malloc(sizeof(int)));
     if (ip == NULL) {
       avrdude_message(MSG_INFO, "%s: out of memory allocating programmer structure\n",
               progname);
@@ -268,9 +268,9 @@ PROGRAMMER * locate_programmer(LISTID programmers, const char * configid)
   found = 0;
 
   for (ln1=lfirst(programmers); ln1 && !found; ln1=lnext(ln1)) {
-    p = ldata(ln1);
+    p = static_cast<PROGRAMMER*>(ldata(ln1));
     for (ln2=lfirst(p->id); ln2 && !found; ln2=lnext(ln2)) {
-      id = ldata(ln2);
+      id = static_cast<const char*>(ldata(ln2));
       if (strcasecmp(configid, id) == 0)
         found = 1;
     }
@@ -299,9 +299,9 @@ void walk_programmers(LISTID programmers, walk_programmers_cb cb, void *cookie)
   PROGRAMMER * p;
 
   for (ln1 = lfirst(programmers); ln1; ln1 = lnext(ln1)) {
-    p = ldata(ln1);
+    p = static_cast<PROGRAMMER*>(ldata(ln1));
     for (ln2=lfirst(p->id); ln2; ln2=lnext(ln2)) {
-      cb(ldata(ln2), p->desc, p->config_file, p->lineno, cookie);
+      cb(static_cast<const char*>(ldata(ln2)), p->desc, p->config_file, p->lineno, cookie);
     }
   }
 }
@@ -316,8 +316,8 @@ static int sort_programmer_compare(PROGRAMMER * p1,PROGRAMMER * p2)
   if(p1 == NULL || p2 == NULL) {
     return 0;
   }
-  id1 = ldata(lfirst(p1->id));
-  id2 = ldata(lfirst(p2->id));
+  id1 = static_cast<char*>(ldata(lfirst(p1->id)));
+  id2 = static_cast<char*>(ldata(lfirst(p2->id)));
   return strncasecmp(id1,id2,AVR_IDLEN);
 }
 

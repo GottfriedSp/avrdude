@@ -55,17 +55,17 @@ extern LISTID       string_list;
 extern LISTID       number_list;
 
 
-#if !defined(HAS_YYSTYPE)
-#define YYSTYPE token_p
-#endif
-extern YYSTYPE yylval;
-
 extern char string_buf[MAX_STR_CONST];
 extern char *string_buf_ptr;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if !defined(HAS_YYSTYPE)
+#define YYSTYPE token_p
+#endif
+extern YYSTYPE yylval;
 
 int yyparse(void);
 

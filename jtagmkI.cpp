@@ -199,7 +199,7 @@ static int jtagmkI_send(PROGRAMMER * pgm, unsigned char * data, size_t len)
   avrdude_message(MSG_DEBUG, "\n%s: jtagmkI_send(): sending %u bytes\n",
 	    progname, (unsigned int)len);
 
-  if ((buf = malloc(len + 2)) == NULL)
+  if ((buf = static_cast<unsigned char*>(malloc(len + 2))) == NULL)
     {
       avrdude_message(MSG_INFO, "%s: jtagmkI_send(): out of memory",
 	      progname);
@@ -386,7 +386,7 @@ static void jtagmkI_set_devdescr(PROGRAMMER * pgm, AVRPART * p)
   sendbuf.dd.ucRAMPZAddress = p->rampz;
   sendbuf.dd.ucIDRAddress = p->idr;
   for (ln = lfirst(p->mem); ln; ln = lnext(ln)) {
-    m = ldata(ln);
+    m = static_cast<AVRMEM*>(ldata(ln));
     if (strcmp(m->desc, "flash") == 0) {
       PDATA(pgm)->flash_pagesize = m->page_size;
       u16_to_b2(sendbuf.dd.uiFlashPageSize, PDATA(pgm)->flash_pagesize);
@@ -591,12 +591,12 @@ static int jtagmkI_initialize(PROGRAMMER * pgm, AVRPART * p)
 
   free(PDATA(pgm)->flash_pagecache);
   free(PDATA(pgm)->eeprom_pagecache);
-  if ((PDATA(pgm)->flash_pagecache = malloc(PDATA(pgm)->flash_pagesize)) == NULL) {
+  if ((PDATA(pgm)->flash_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->flash_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtagmkI_initialize(): Out of memory\n",
 	    progname);
     return -1;
   }
-  if ((PDATA(pgm)->eeprom_pagecache = malloc(PDATA(pgm)->eeprom_pagesize)) == NULL) {
+  if ((PDATA(pgm)->eeprom_pagecache = static_cast<unsigned char*>(malloc(PDATA(pgm)->eeprom_pagesize))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtagmkI_initialize(): Out of memory\n",
 	    progname);
     free(PDATA(pgm)->flash_pagecache);
@@ -735,7 +735,7 @@ static int jtagmkI_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     return -1;
   }
 
-  if ((datacmd = malloc(page_size + 1)) == NULL) {
+  if ((datacmd = static_cast<unsigned char*>(malloc(page_size + 1))) == NULL) {
     avrdude_message(MSG_INFO, "%s: jtagmkI_paged_write(): Out of memory\n",
 	    progname);
     return -1;

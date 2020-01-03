@@ -592,7 +592,7 @@ static int ft245r_open(PROGRAMMER * pgm, char * port) {
       return -1;
     }
 
-    handle = malloc (sizeof (struct ftdi_context));
+    handle = static_cast<ftdi_context*>(malloc (sizeof (struct ftdi_context)));
     ftdi_init(handle);
     LNODEID usbpid = lfirst(pgm->usbpid);
     int pid;
@@ -746,7 +746,7 @@ static void put_request(int addr, int bytes, int n) {
         p = req_pool;
         req_pool = p->next;
     } else {
-        p = malloc(sizeof(struct ft245r_request));
+        p = static_cast<ft245r_request*>(malloc(sizeof(struct ft245r_request)));
         if (!p) {
             avrdude_message(MSG_INFO, "can't alloc memory\n");
             exit(1);

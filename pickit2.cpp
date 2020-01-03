@@ -52,6 +52,7 @@
 
 #include "avrdude.h"
 #include "libavrdude.h"
+#include "pickit2.h"
 
 #if defined(HAVE_LIBUSB) || (defined(WIN32NATIVE) && defined(HAVE_LIBHID))
 
@@ -1185,7 +1186,7 @@ static int usb_open_device(struct usb_dev_handle **device, int vendor, int produ
 static int pickit2_write_report(PROGRAMMER * pgm, const unsigned char report[65])
 {
     // endpoint 1 OUT??
-    return usb_interrupt_write(PDATA(pgm)->usb_handle, USB_ENDPOINT_OUT | 1, (const char*)(report+1), 64, PDATA(pgm)->transaction_timeout);
+    return usb_interrupt_write(PDATA(pgm)->usb_handle, USB_ENDPOINT_OUT | 1, (char*)(report+1), 64, PDATA(pgm)->transaction_timeout);
 }
 
 static int pickit2_read_report(PROGRAMMER * pgm, unsigned char report[65])
@@ -1203,7 +1204,7 @@ static int  pickit2_parseextparams(struct programmer_t * pgm, LISTID extparms)
 
     for (ln = lfirst(extparms); ln; ln = lnext(ln))
     {
-        extended_param = ldata(ln);
+        extended_param = static_cast<const char*>(ldata(ln));
 
         if (strncmp(extended_param, "clockrate=", strlen("clockrate=")) == 0)
         {

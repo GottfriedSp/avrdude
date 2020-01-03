@@ -204,7 +204,7 @@ static int usbasp_parseextparms(PROGRAMMER * pgm, LISTID extparms)
   int rv = 0;
 
   for (ln = lfirst(extparms); ln; ln = lnext(ln)) {
-    extended_param = ldata(ln);
+    extended_param = static_cast<const char*>(ldata(ln));
 
     if (strncmp(extended_param, "section_config", strlen("section_config")) == 0) {
       avrdude_message(MSG_NOTICE2, "%s: usbasp_parseextparms(): set section_e to 1 (config section)\n",
@@ -491,7 +491,7 @@ static int usbasp_open(PROGRAMMER * pgm, char * port)
   vid = pgm->usbvid? pgm->usbvid: USBASP_SHARED_VID;
   if (usbOpenDevice(&PDATA(pgm)->usbhandle, vid, pgm->usbvendor, pid, pgm->usbproduct) != 0) {
     /* try alternatives */
-    if(strcasecmp(ldata(lfirst(pgm->id)), "usbasp") == 0) {
+    if(strcasecmp(static_cast<const char*>(ldata(lfirst(pgm->id))), "usbasp") == 0) {
     /* for id usbasp autodetect some variants */
       if(strcasecmp(port, "nibobee") == 0) {
         avrdude_message(MSG_INFO, "%s: warning: Using \"-C usbasp -P nibobee\" is deprecated,"

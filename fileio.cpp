@@ -812,7 +812,7 @@ static int elf2b(char * infile, FILE * inf,
                  AVRMEM * mem, struct avrpart * p,
                  int bufsize, unsigned int fileoffset)
 {
-  Elf *e;
+  Elf *e = 0;
   int rv = -1;
   unsigned int low, high, foff;
 
@@ -862,7 +862,8 @@ static int elf2b(char * infile, FILE * inf,
   }
 
   size_t i, isize;
-  const char *id = elf_getident(e, &isize);
+  const char *id;
+  id = elf_getident(e, &isize);
 
   if (id == NULL) {
     avrdude_message(MSG_INFO, "%s: ERROR: Error reading ident area of \"%s\": %s\n",
@@ -1507,7 +1508,7 @@ int fileio(int op, char * filename, FILEFMT format,
                       progname, fname);
       return -1;
     }
-    format = format_detect;
+    format = static_cast<FILEFMT>(format_detect);
 
     if (quell_progress < 2) {
       avrdude_message(MSG_INFO, "%s: %s file %s auto detected as %s\n",

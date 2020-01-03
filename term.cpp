@@ -296,7 +296,7 @@ static int cmd_dump(PROGRAMMER * pgm, struct avrpart * p,
   if ((addr + len) > maxsize)
     len = maxsize - addr;
 
-  buf = malloc(len);
+  buf = static_cast<unsigned char*>(malloc(len));
   if (buf == NULL) {
     avrdude_message(MSG_INFO, "%s (dump): out of memory\n", progname);
     return -1;
@@ -379,7 +379,7 @@ static int cmd_write(PROGRAMMER * pgm, struct avrpart * p,
     return -1;
   }
 
-  buf = malloc(len);
+  buf = static_cast<unsigned char*>(malloc(len));
   if (buf == NULL) {
     avrdude_message(MSG_INFO, "%s (write): out of memory\n", progname);
     return -1;
@@ -796,7 +796,7 @@ static int tokenize(char * s, char *** argv)
    */
   nargs   = 20;
   bufsize = slen + 20;
-  buf     = malloc(bufsize);
+  buf     = static_cast<char*>(malloc(bufsize));
   bufv    = (char **) malloc(nargs*sizeof(char *));
   for (i=0; i<nargs; i++) {
     bufv[i] = NULL;
@@ -820,8 +820,8 @@ static int tokenize(char * s, char *** argv)
       /* realloc space for another 20 args */
       bufsize += 20;
       nargs   += 20;
-      buf      = realloc(buf, bufsize);
-      bufv     = realloc(bufv, nargs*sizeof(char *));
+      buf      = static_cast<char*>(realloc(buf, bufsize));
+      bufv     = static_cast<char**>(realloc(bufv, nargs*sizeof(char *)));
       nbuf     = &buf[l];
       for (i=n; i<nargs; i++)
         bufv[i] = NULL;

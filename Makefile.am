@@ -102,98 +102,98 @@ libavrdude_a_SOURCES = \
 	config_gram.y \
 	lexer.l \
 	arduino.h \
-	arduino.c \
-	avr.c \
-	avr910.c \
+	arduino.cpp \
+	avr.cpp \
+	avr910.cpp \
 	avr910.h \
 	avrdude.h \
-	avrftdi.c \
+	avrftdi.cpp \
 	avrftdi.h \
 	avrftdi_private.h \
-	avrftdi_tpi.c \
+	avrftdi_tpi.cpp \
 	avrftdi_tpi.h \
-	avrpart.c \
-	bitbang.c \
+	avrpart.cpp \
+	bitbang.cpp \
 	bitbang.h \
-	buspirate.c \
+	buspirate.cpp \
 	buspirate.h \
-	butterfly.c \
+	butterfly.cpp \
 	butterfly.h \
-	config.c \
+	config.cpp \
 	config.h \
-	confwin.c \
-	crc16.c \
+	confwin.cpp \
+	crc16.cpp \
 	crc16.h \
-	dfu.c \
+	dfu.cpp \
 	dfu.h \
-	fileio.c \
-	flip1.c \
+	fileio.cpp \
+	flip1.cpp \
 	flip1.h \
-	flip2.c \
+	flip2.cpp \
 	flip2.h \
 	freebsd_ppi.h \
-	ft245r.c \
+	ft245r.cpp \
 	ft245r.h \
-	jtagmkI.c \
+	jtagmkI.cpp \
 	jtagmkI.h \
 	jtagmkI_private.h \
-	jtagmkII.c \
+	jtagmkII.cpp \
 	jtagmkII.h \
 	jtagmkII_private.h \
-	jtag3.c \
+	jtag3.cpp \
 	jtag3.h \
 	jtag3_private.h \
 	libavrdude.h \
-	linuxgpio.c \
+	linuxgpio.cpp \
 	linuxgpio.h \
 	linux_ppdev.h \
-	lists.c \
+	lists.cpp \
 	my_ddk_hidsdi.h \
-	par.c \
+	par.cpp \
 	par.h \
-	pgm.c \
-	pgm_type.c \
-	pickit2.c \
+	pgm.cpp \
+	pgm_type.cpp \
+	pickit2.cpp \
 	pickit2.h \
-	pindefs.c \
-	ppi.c \
+	pindefs.cpp \
+	ppi.cpp \
 	ppi.h \
-	ppiwin.c \
-	safemode.c \
+	ppiwin.cpp \
+	safemode.cpp \
 	serbb.h \
-	serbb_posix.c \
-	serbb_win32.c \
-	ser_avrdoper.c \
-	ser_posix.c \
-	ser_win32.c \
+	serbb_posix.cpp \
+	serbb_win32.cpp \
+	ser_avrdoper.cpp \
+	ser_posix.cpp \
+	ser_win32.cpp \
 	solaris_ecpp.h \
-	stk500.c \
+	stk500.cpp \
 	stk500.h \
 	stk500_private.h \
-	stk500v2.c \
+	stk500v2.cpp \
 	stk500v2.h \
 	stk500v2_private.h \
-	stk500generic.c \
+	stk500generic.cpp \
 	stk500generic.h \
 	tpi.h \
-	usbasp.c \
+	usbasp.cpp \
 	usbasp.h \
 	usbdevs.h \
-	usb_hidapi.c \
-	usb_libusb.c \
+	usb_hidapi.cpp \
+	usb_libusb.cpp \
 	usbtiny.h \
-	usbtiny.c \
-	update.c \
+	usbtiny.cpp \
+	update.cpp \
 	wiring.h \
-	wiring.c
+	wiring.cpp
 libavrdude_la_SOURCES = $(libavrdude_a_SOURCES)
 libavrdude_la_LDFLAGS = -version-info 1:0
 
 include_HEADERS = libavrdude.h
 
 avrdude_SOURCES = \
-	main.c \
-	term.c \
+	main.cpp \
+	term.cpp \
 	term.h
 
 man_MANS = avrdude.1
