@@ -43,7 +43,11 @@
 #if defined(HAVE_LIBUSB) || defined(HAVE_LIBUSB_1_0)
 
 #ifdef HAVE_LIBUSB_1_0
+// libusb1.0.21-1 from cygwin does not work when usbasp is installed with libusb0 driver installed!
+#if defined(HAVE_LIBUSB) && (defined(__CYGWIN__) || defined(__MINGW32__) || defined(_MSC_VER))
+#else
 # define USE_LIBUSB_1_0
+#endif
 #endif
 
 #if defined(USE_LIBUSB_1_0)
