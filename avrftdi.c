@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id$ */
 /*
  * Interface to the MPSSE Engine of FTDI Chips using libftdi.
  */

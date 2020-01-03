@@ -25,9 +25,6 @@
 #
 # make V=1
 
-#
-# $Id$
-#
 
 EXTRA_DIST   = \
 	ChangeLog \

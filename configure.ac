@@ -16,10 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-#
-# $Id$
-#
-
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.60)

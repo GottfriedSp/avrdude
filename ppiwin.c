@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id$ */
 
 /*
 This is the parallel port interface for Windows built using Cygwin.

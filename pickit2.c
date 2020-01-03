@@ -19,7 +19,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id: pickit2.c 2010-05-03 dbrown$ */
 /* Based on Id: stk500v2.c 836 2009-07-10 22:39:37Z joerg_wunsch */
 
 /*

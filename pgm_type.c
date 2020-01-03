@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id: pgm.c 976 2011-08-23 21:03:36Z joerg_wunsch $ */
 
 #include "ac_cfg.h"
 

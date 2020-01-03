@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id: pickit2.h 2010-05-03 dbrown $ */
 
 #ifndef pickit2_h
 #define pickit2_h

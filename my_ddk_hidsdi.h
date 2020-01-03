@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id$ */
 
 /*
 The following is a replacement for hidsdi.h from the Windows DDK. It defines some

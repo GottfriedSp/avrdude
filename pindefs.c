@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* $Id: pindefs.h 1132 2013-01-09 19:23:30Z rliebscher $ */
 
 #include <string.h>
 #include <stdio.h>

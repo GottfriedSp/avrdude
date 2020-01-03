@@ -17,10 +17,6 @@
 #
 
 #
-# $Id$
-#
-
-#
 # This Makefile will only be used on windows based systems.
 #
 
