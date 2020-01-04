@@ -10,7 +10,6 @@ ifdef COMSPEC
 # Windows
 EXT   = .exe
 LIBS  = 
-#LIBS  = -lws2_32 -lhidapi -lncurses 
 endif
 
 

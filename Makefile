@@ -33,7 +33,7 @@ LIBUSB = -lusb
 LIBUSB_1_0 = -lusb-1.0
 LIPO =
 
-LIBS = -lhidapi -lncurses
+LIBS = 
 LIBS += $(LEXLIB) $(LIBUSB_1_0) $(LIBUSB) $(LIBFTDI) $(LIBFTDI1) $(LIBHID) $(LIBELF) $(LIBPTHREAD) -lm
 
 ifdef COMSPEC
@@ -41,7 +41,7 @@ ifdef COMSPEC
 CFLAGS   += -DWIN32NATIVE
 CXXFLAGS += -DWIN32NATIVE
 EXT   = .exe
-LIBS  += -lws2_32
+LIBS  += -lws2_32 -lhidapi
 MAKE_WINDOWS_LOADDRV = windows
 else
 # linux
