@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,7 +204,7 @@ static unsigned char bitbang_txrx(PROGRAMMER * pgm, unsigned char byte)
   return rbyte;
 }
 
-static int bitbang_tpi_clk(PROGRAMMER * pgm) 
+static int bitbang_tpi_clk(PROGRAMMER * pgm)
 {
   unsigned char r = 0;
   pgm->setpin(pgm, PIN_AVR_SCK, 1);
@@ -216,7 +216,7 @@ static int bitbang_tpi_clk(PROGRAMMER * pgm)
   return r;
 }
 
-void bitbang_tpi_tx(PROGRAMMER * pgm, unsigned char byte) 
+void bitbang_tpi_tx(PROGRAMMER * pgm, unsigned char byte)
 {
   int i;
   unsigned char b, parity;
@@ -234,7 +234,7 @@ void bitbang_tpi_tx(PROGRAMMER * pgm, unsigned char byte)
     pgm->setpin(pgm, PIN_AVR_MOSI, b);
     bitbang_tpi_clk(pgm);
   }
-  
+
   /* parity bit */
   pgm->setpin(pgm, PIN_AVR_MOSI, parity);
   bitbang_tpi_clk(pgm);
@@ -245,7 +245,7 @@ void bitbang_tpi_tx(PROGRAMMER * pgm, unsigned char byte)
   bitbang_tpi_clk(pgm);
 }
 
-int bitbang_tpi_rx(PROGRAMMER * pgm) 
+int bitbang_tpi_rx(PROGRAMMER * pgm)
 {
   int i;
   unsigned char b, rbyte, parity;
@@ -288,7 +288,7 @@ int bitbang_tpi_rx(PROGRAMMER * pgm)
     avrdude_message(MSG_INFO, "bitbang_tpi_rx: stop bits not received correctly\n");
     return -1;
   }
-  
+
   return rbyte;
 }
 

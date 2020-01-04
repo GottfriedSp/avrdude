@@ -34,7 +34,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -229,11 +229,11 @@ static int butterfly_initialize(PROGRAMMER * pgm, AVRPART * p)
 
       putc('.', stderr);
       butterfly_send(pgm, mk_reset_cmd, sizeof(mk_reset_cmd) - 1);
-      usleep(20000); 
+      usleep(20000);
 
       do
 	{
-	  c = 27; 
+	  c = 27;
 	  butterfly_send(pgm, &c, 1);
 	  usleep(20000);
 	  c = 0xaa;
@@ -428,7 +428,7 @@ static void butterfly_set_addr(PROGRAMMER * pgm, unsigned long addr)
   cmd[0] = 'A';
   cmd[1] = (addr >> 8) & 0xff;
   cmd[2] = addr & 0xff;
-  
+
   butterfly_send(pgm, cmd, sizeof(cmd));
   butterfly_vfy_cmd_sent(pgm, "set addr");
 }

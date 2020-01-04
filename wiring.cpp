@@ -33,11 +33,11 @@
  * AVRDUDE will wait that amount of time in milliseconds before syncing.
  *
  * Unfortunately, there is no way to easily chain private programmer data
- * when we "inherit" programmer types as we have (stk500v2).  Sooooo, a 
+ * when we "inherit" programmer types as we have (stk500v2).  Sooooo, a
  * *cringe* global variable is used to store the snooze time.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <string.h>

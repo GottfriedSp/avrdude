@@ -20,7 +20,7 @@
 
 #if !defined(WIN32NATIVE)
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #if HAVE_PARPORT
 

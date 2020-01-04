@@ -25,7 +25,7 @@
  * divert to the actual programmer implementation if successful.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <string.h>

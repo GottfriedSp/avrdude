@@ -34,7 +34,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -580,7 +580,7 @@ static int buspirate_start_mode_bin(struct programmer_t *pgm)
 		buspirate_reset_from_binmode(pgm);
 		return -1;
 	}
-	avrdude_message(MSG_NOTICE, "BusPirate %s version: %d\n", 
+	avrdude_message(MSG_NOTICE, "BusPirate %s version: %d\n",
 	                submode->name, PDATA(pgm)->submode_version);
 
 	if (pgm->flag & BP_FLAG_NOPAGEDWRITE) {
@@ -739,7 +739,7 @@ static void buspirate_enable(struct programmer_t *pgm)
 
 	avrdude_message(MSG_INFO, "Attempting to initiate BusPirate ASCII mode...\n");
 
-	/* Call buspirate_send_bin() instead of buspirate_send() 
+	/* Call buspirate_send_bin() instead of buspirate_send()
 	 * because we don't know if BP is in text or bin mode */
 	rc = buspirate_send_bin(pgm, (const unsigned char*)reset_str, strlen(reset_str));
 	if (rc) {
@@ -1235,7 +1235,7 @@ static void buspirate_bb_enable(struct programmer_t *pgm)
 	return;
 }
 
-/* 
+/*
    Direction:
    010xxxxx
    Input (1) or output (0):
@@ -1301,7 +1301,7 @@ static int buspirate_bb_setpin_internal(struct programmer_t *pgm, int pin, int v
 
 	if (value)
 		PDATA(pgm)->pin_val |= (1 << (pin - 1));
-	else 
+	else
 		PDATA(pgm)->pin_val &= ~(1 << (pin - 1));
 
 	buf[0] = PDATA(pgm)->pin_val | 0x80;

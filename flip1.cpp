@@ -20,7 +20,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>

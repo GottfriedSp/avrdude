@@ -50,7 +50,7 @@
 */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,7 +81,7 @@
 #elif defined(HAVE_LIBFTDI) && defined(HAVE_USB_H)
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
-#else 
+#else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_FT245R
 #endif
@@ -615,7 +615,7 @@ static int ft245r_open(PROGRAMMER * pgm, char * port) {
         goto cleanup_no_usb;
     }
 
-    ft245r_ddr = 
+    ft245r_ddr =
          pgm->pin[PIN_AVR_SCK].mask[0]
        | pgm->pin[PIN_AVR_MOSI].mask[0]
        | pgm->pin[PIN_AVR_RESET].mask[0]

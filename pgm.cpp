@@ -18,7 +18,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -231,7 +231,7 @@ void programmer_display(PROGRAMMER * pgm, const char * p)
 
 void pgm_display_generic_mask(PROGRAMMER * pgm, const char * p, unsigned int show)
 {
-  if(show & (1<<PPI_AVR_VCC)) 
+  if(show & (1<<PPI_AVR_VCC))
     avrdude_message(MSG_INFO, "%s  VCC     = %s\n", p, pins_to_str(&pgm->pin[PPI_AVR_VCC]));
   if(show & (1<<PPI_AVR_BUFF))
     avrdude_message(MSG_INFO, "%s  BUFF    = %s\n", p, pins_to_str(&pgm->pin[PPI_AVR_BUFF]));

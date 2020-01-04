@@ -1,5 +1,5 @@
 #pragma once
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdint.h>
 
@@ -15,7 +15,7 @@
 #elif defined(HAVE_LIBFTDI) && defined(HAVE_USB_H)
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
-#else 
+#else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_AVRFTDI
 #endif
@@ -63,7 +63,7 @@ enum { ERR, WARN, INFO, DEBUG, TRACE };
 
 typedef struct avrftdi_s {
 	/* pointer to struct maintained by libftdi to identify the device */
-	struct ftdi_context* ftdic; 
+	struct ftdi_context* ftdic;
 	/* bitmask of values for pins. bit 0 represents pin 0 ([A|B]DBUS0) */
 	uint16_t pin_value;
 	/* bitmask of pin direction. a '1' make a pin an output.

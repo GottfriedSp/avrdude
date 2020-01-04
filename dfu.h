@@ -20,7 +20,7 @@
 #ifndef dfu_h
 #define dfu_h
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #ifdef HAVE_LIBUSB
 #if defined(HAVE_USB_H)

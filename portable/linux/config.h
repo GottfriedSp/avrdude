@@ -4,4 +4,4 @@
 // Debian
 
 #undef HAVE_HIDAPI_HIDAPI_H
-
+#undef HAVE_LIBHIDAPI

@@ -22,7 +22,7 @@
  * USB interface via libusb for avrdude.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 #if defined(HAVE_LIBUSB)
 
 
@@ -533,7 +533,7 @@ static int usbdev_recv_frame(union filedescriptor *fd, unsigned char *buf, size_
 /*
  this ends when the buffer is completly filled (nbytes=0) or was too small (nbytes< 0)
  or a short packet is found.
- however we cannot say for nbytes=0 that there was really a packet completed, 
+ however we cannot say for nbytes=0 that there was really a packet completed,
  we had to check the last rv value than for a short packet,
  but what happens if the packet does not end with a short packet?
  and what if the buffer is filled without the packet was completed?

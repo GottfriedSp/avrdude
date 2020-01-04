@@ -27,7 +27,7 @@
 #if defined(WIN32NATIVE)
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <windows.h>
 #include <stdio.h>

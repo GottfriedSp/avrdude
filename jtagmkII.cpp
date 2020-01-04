@@ -29,7 +29,7 @@
  * as well.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <ctype.h>
 #include <limits.h>

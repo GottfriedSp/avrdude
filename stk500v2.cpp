@@ -34,7 +34,7 @@
  *
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -2321,7 +2321,7 @@ static int stk500v2_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     commandbuf[6] = cmds[0];
 
   // otherwise, we need to load different commands in
-  } 
+  }
   else {
     commandbuf[3] = m->mode | 0x80;		// yes, write the words to flash
 

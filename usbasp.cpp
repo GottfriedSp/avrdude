@@ -23,7 +23,7 @@
  *
  * See http://www.fischl.de/usbasp/
  */
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -274,10 +274,10 @@ static int usbasp_transmit(PROGRAMMER * pgm,
 #ifdef USE_LIBUSB_1_0
   nbytes = libusb_control_transfer(PDATA(pgm)->usbhandle,
 				   (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | (receive << 7)) & 0xff,
-				   functionid & 0xff, 
-				   ((send[1] << 8) | send[0]) & 0xffff, 
-				   ((send[3] << 8) | send[2]) & 0xffff, 
-				   buffer, 
+				   functionid & 0xff,
+				   ((send[1] << 8) | send[0]) & 0xffff,
+				   ((send[3] << 8) | send[2]) & 0xffff,
+				   buffer,
 				   buffersize & 0xffff,
 				   5000);
   if(nbytes < 0){
@@ -330,7 +330,7 @@ static int usbOpenDevice(libusb_device_handle **device, int vendor,
         didUsbInit = 1;
         libusb_init(&ctx);
     }
-    
+
     libusb_device **dev_list;
     int dev_list_len = libusb_get_device_list(ctx, &dev_list);
 
@@ -614,7 +614,7 @@ static int usbasp_initialize(PROGRAMMER * pgm, AVRPART * p)
 
     /* connect */
     usbasp_transmit(pgm, 1, USBASP_FUNC_TPI_CONNECT, temp, res, sizeof(res));
-    
+
     /* change interface */
     pgm->program_enable = usbasp_tpi_program_enable;
     pgm->chip_erase     = usbasp_tpi_chip_erase;
@@ -746,7 +746,7 @@ static int usbasp_spi_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     return -2;
   }
 
-  /* set blocksize depending on sck frequency */  
+  /* set blocksize depending on sck frequency */
   if ((PDATA(pgm)->sckfreq_hz > 0) && (PDATA(pgm)->sckfreq_hz < 10000)) {
      blocksize = USBASP_READBLOCKSIZE / 10;
   } else {
@@ -814,7 +814,7 @@ static int usbasp_spi_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     return -2;
   }
 
-  /* set blocksize depending on sck frequency */  
+  /* set blocksize depending on sck frequency */
   if ((PDATA(pgm)->sckfreq_hz > 0) && (PDATA(pgm)->sckfreq_hz < 10000)) {
      blocksize = USBASP_WRITEBLOCKSIZE / 10;
   } else {
@@ -853,7 +853,7 @@ static int usbasp_spi_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     if (n != blocksize) {
       avrdude_message(MSG_INFO, "%s: error: wrong count at writing %x\n",
 	      progname, n);
-      return -3;        
+      return -3;
     }
 
 
@@ -1119,7 +1119,7 @@ static int usbasp_tpi_paged_load(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
       avrdude_message(MSG_INFO, "%s: error: wrong reading bytes %x\n", progname, n);
       return -3;
     }
-    
+
     readed += clen;
     pr += clen;
     dptr += clen;
@@ -1168,7 +1168,7 @@ static int usbasp_tpi_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
       avrdude_message(MSG_INFO, "%s: error: wrong count at writing %x\n", progname, n);
       return -3;
     }
-    
+
     writed += clen;
     pr += clen;
     sptr += clen;

@@ -23,7 +23,7 @@
  * For example schematics and detailed documentation
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -355,7 +355,7 @@ static	int	usbtiny_open(PROGRAMMER* pgm, char* name)
   } else {
     pid = USBTINY_PRODUCT_DEFAULT;
   }
-  
+
 
   // now we iterate through all the busses and devices
   for ( bus = usb_busses; bus; bus = bus->next ) {

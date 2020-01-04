@@ -27,7 +27,7 @@
  *
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,11 +93,11 @@ int stk500_getsync(PROGRAMMER * pgm)
    * get in sync */
   buf[0] = Cmnd_STK_GET_SYNC;
   buf[1] = Sync_CRC_EOP;
-  
+
   /*
-   * First send and drain a few times to get rid of line noise 
+   * First send and drain a few times to get rid of line noise
    */
-   
+
   stk500_send(pgm, buf, 2);
   stk500_drain(pgm, 0);
   stk500_send(pgm, buf, 2);
@@ -217,7 +217,7 @@ static int stk500_program_enable(PROGRAMMER * pgm, AVRPART * p)
   int tries=0;
 
  retry:
-  
+
   tries++;
 
   buf[0] = Cmnd_STK_ENTER_PROGMODE;
@@ -278,7 +278,7 @@ static int stk500_set_extended_parms(PROGRAMMER * pgm, int n,
   int i;
 
  retry:
-  
+
   tries++;
 
   buf[0] = Cmnd_STK_SET_DEVICE_EXT;
@@ -461,7 +461,7 @@ static int stk500_initialize(PROGRAMMER * pgm, AVRPART * p)
   avrdude_message(MSG_INFO, "%s: stk500_initialize(): n_extparms = %d\n",
           progname, n_extparms);
 #endif
-    
+
   buf[5] = 1; /* polling supported - XXX need this in config file */
   buf[6] = 1; /* programming is self-timed - XXX need in config file */
 
@@ -603,7 +603,7 @@ static void stk500_disable(PROGRAMMER * pgm)
   int tries=0;
 
  retry:
-  
+
   tries++;
 
   buf[0] = Cmnd_STK_LEAVE_PROGMODE;
@@ -788,7 +788,7 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
                   "a_div     = %d\n"
                   "page_size = %d\n",
                   n_bytes, n, a_div, page_size);
-#endif     
+#endif
 
   for (; addr < n; addr += block_size) {
     // MIB510 uses fixed blocks size of 256 bytes
@@ -835,7 +835,7 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
                       progname, Resp_STK_INSYNC, buf[0]);
       return -4;
     }
-    
+
     if (stk500_recv(pgm, buf, 1) < 0)
       return -1;
     if (buf[0] != Resp_STK_OK) {
@@ -1016,7 +1016,7 @@ static int stk500_set_fosc(PROGRAMMER * pgm, double v)
       fosc = STK500_XTAL / 2;
     } else
       fosc = (unsigned)v;
-    
+
     for (idx = 0; idx < sizeof(ps) / sizeof(ps[0]); idx++) {
       if (fosc >= STK500_XTAL / (256 * ps[idx] * 2)) {
         /* this prescaler value can handle our frequency */
@@ -1031,11 +1031,11 @@ static int stk500_set_fosc(PROGRAMMER * pgm, double v)
       return -1;
     }
   }
-  
+
   if ((rc = stk500_setparm(pgm, Parm_STK_OSC_PSCALE, prescale)) != 0
       || (rc = stk500_setparm(pgm, Parm_STK_OSC_CMATCH, cmatch)) != 0)
     return rc;
-  
+
   return 0;
 }
 
@@ -1055,7 +1055,7 @@ static int stk500_set_sck_period(PROGRAMMER * pgm, double v)
   min = 8.0 / STK500_XTAL;
   max = 255 * min;
   dur = v / min + 0.5;
-  
+
   if (v < min) {
       dur = 1;
       avrdude_message(MSG_INFO, "%s: stk500_set_sck_period(): p = %.1f us too small, using %.1f us\n",
@@ -1065,7 +1065,7 @@ static int stk500_set_sck_period(PROGRAMMER * pgm, double v)
       avrdude_message(MSG_INFO, "%s: stk500_set_sck_period(): p = %.1f us too large, using %.1f us\n",
                       progname, v / 1e-6, dur * min / 1e-6);
   }
-  
+
   return stk500_setparm(pgm, Parm_STK_SCK_DURATION, dur);
 }
 
@@ -1126,7 +1126,7 @@ static int stk500_getparm(PROGRAMMER * pgm, unsigned parm, unsigned * value)
   return 0;
 }
 
-  
+
 static int stk500_setparm(PROGRAMMER * pgm, unsigned parm, unsigned value)
 {
   unsigned char buf[16];
@@ -1181,7 +1181,7 @@ static int stk500_setparm(PROGRAMMER * pgm, unsigned parm, unsigned value)
   }
 }
 
-  
+
 static void stk500_display(PROGRAMMER * pgm, const char * p)
 {
   unsigned maj, min, hdw, topcard;

@@ -19,7 +19,7 @@
 /*
  * Interface to the MPSSE Engine of FTDI Chips using libftdi.
  */
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -230,7 +230,7 @@ static int set_pin(PROGRAMMER * pgm, int pinfunc, int value)
 {
 	avrftdi_t* pdata = to_pdata(pgm);
 	struct pindef_t pin = pgm->pin[pinfunc];
-	
+
 	if (pin.mask[0] == 0) {
 		// ignore not defined pins (might be the led or vcc or buff if not needed)
 		return 0;
@@ -366,7 +366,7 @@ static int avrftdi_transmit_bb(PROGRAMMER * pgm, unsigned char mode, const unsig
 		unsigned char send_buffer[(8*2*6)*transfer_size+(8*1*2)*transfer_size+7];
 		int len = 0;
 		int i;
-		
+
 		for(i = 0 ; i< transfer_size; i++) {
 		    len += set_data(pgm, send_buffer + len, buf[written+i], (mode & MPSSE_DO_READ) != 0);
 		}
@@ -396,11 +396,11 @@ static int avrftdi_transmit_bb(PROGRAMMER * pgm, unsigned char mode, const unsig
 			    data[written + i] = extract_data(pgm, recv_buffer, i);
 			}
 		}
-		
+
 		written += transfer_size;
 		remaining -= transfer_size;
 	}
-	
+
 	return written;
 }
 
@@ -415,7 +415,7 @@ static int avrftdi_transmit_mpsse(avrftdi_t* pdata, unsigned char mode, const un
 	size_t blocksize;
 	size_t remaining = buf_size;
 	size_t written = 0;
-	
+
 	unsigned char cmd[3];
 //	unsigned char si = SEND_IMMEDIATE;
 
@@ -451,11 +451,11 @@ static int avrftdi_transmit_mpsse(avrftdi_t* pdata, unsigned char mode, const un
 			} while (k < transfer_size);
 
 		}
-		
+
 		written += transfer_size;
 		remaining -= transfer_size;
 	}
-	
+
 	return written;
 }
 
@@ -501,7 +501,7 @@ static int write_flush(avrftdi_t* pdata)
 
 	unsigned char cmd[] = { GET_BITS_LOW, SEND_IMMEDIATE };
 	E(ftdi_write_data(pdata->ftdic, cmd, sizeof(cmd)) != sizeof(cmd), pdata->ftdic);
-	
+
 	int num = 0;
 	do
 	{
@@ -510,7 +510,7 @@ static int write_flush(avrftdi_t* pdata)
 			num += n;
 		E(n < 0, pdata->ftdic);
 	} while(num < 1);
-	
+
 	if(num > 1)
 		log_warn("Read %d extra bytes\n", num-1);
 
@@ -651,7 +651,7 @@ static int avrftdi_open(PROGRAMMER * pgm, char *port)
 	int vid, pid, index, err;
   ftdi_interface interface;
 	char * serial, *desc;
-	
+
 	avrftdi_t* pdata = to_pdata(pgm);
 
 	/************************
@@ -660,7 +660,7 @@ static int avrftdi_open(PROGRAMMER * pgm, char *port)
 
 	/* use vid/pid in following priority: config,
 	 * defaults. cmd-line is currently not supported */
-	
+
 	if (pgm->usbvid)
 		vid = pgm->usbvid;
 	else
@@ -700,7 +700,7 @@ static int avrftdi_open(PROGRAMMER * pgm, char *port)
 	 ****************/
 
 	E(ftdi_set_interface(pdata->ftdic, interface) < 0, pdata->ftdic);
-	
+
 	err = ftdi_usb_open_desc_index(pdata->ftdic, vid, pid, desc, serial, index);
 	if(err) {
 		log_err("Error %d occurred: %s\n", err, ftdi_get_error_string(pdata->ftdic));
@@ -712,7 +712,7 @@ static int avrftdi_open(PROGRAMMER * pgm, char *port)
 		log_info("Using device VID:PID %04x:%04x and SN '%s' on interface %c.\n",
 		         vid, pid, serial, INTERFACE_A == interface? 'A': 'B');
 	}
-	
+
 	ftdi_set_latency_timer(pdata->ftdic, 1);
 	//ftdi_write_data_set_chunksize(pdata->ftdic, 16);
 	//ftdi_read_data_set_chunksize(pdata->ftdic, 16);
@@ -919,7 +919,7 @@ avrftdi_lext(PROGRAMMER *pgm, AVRPART *p, AVRMEM *m, unsigned int address)
 
 	if (0 > avrftdi_transmit(pgm, MPSSE_DO_WRITE, buf, buf, 4))
 		return -1;
-	
+
 	return 0;
 }
 
@@ -973,7 +973,7 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 		unsigned int page_size, unsigned int addr, unsigned int len)
 {
 	int use_lext_address = m->op[AVR_OP_LOAD_EXT_ADDR] != NULL;
-	
+
 	unsigned int word;
 	unsigned int poll_index;
 	unsigned int buf_size;
@@ -1013,7 +1013,7 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 		if (0 > avrftdi_lext(pgm, p, m, addr/2))
 			return -1;
 	}
-	
+
 	/* prepare the command stream for the whole page */
 	/* addr is in bytes, but we program in words. addr/2 should be something
 	 * like addr >> WORD_SHIFT, though */
@@ -1116,12 +1116,12 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 		log_err("AVR_OP_READ_HI command not defined for %s\n", p->desc);
 		return -1;
 	}
-	
+
 	if(use_lext_address && ((address & 0xffff0000))) {
 		if (0 > avrftdi_lext(pgm, p, m, address))
 			return -1;
 	}
-	
+
 	/* word addressing! */
 	for(word = addr/2, index = 0; word < (addr + len)/2; word++)
 	{

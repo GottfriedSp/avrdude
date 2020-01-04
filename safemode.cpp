@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include "avrdude.h"
 #include "libavrdude.h"
@@ -285,7 +285,7 @@ int safemode_readfuses (unsigned char * lfuse, unsigned char * hfuse,
  * values from the internal buffer into the locations pointed to be
  * lfuse, hfuse, and efuse. This allows you to change the fuse bits if
  * needed from another routine (ie: have it so if user requests fuse
- * bits are changed, the requested value is now verified 
+ * bits are changed, the requested value is now verified
  */
 int safemode_memfuses (int save, unsigned char * lfuse, unsigned char * hfuse,
                        unsigned char * efuse, unsigned char * fuse)

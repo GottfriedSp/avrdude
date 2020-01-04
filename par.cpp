@@ -17,7 +17,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,9 +64,9 @@ static struct ppipins_t ppipins[] = {
   { 11, PPISTATUS, 0x80, 1 },
   { 12, PPISTATUS, 0x20, 0 },
   { 13, PPISTATUS, 0x10, 0 },
-  { 14, PPICTRL,   0x02, 1 }, 
+  { 14, PPICTRL,   0x02, 1 },
   { 15, PPISTATUS, 0x08, 0 },
-  { 16, PPICTRL,   0x04, 0 }, 
+  { 16, PPICTRL,   0x04, 0 },
   { 17, PPICTRL,   0x08, 1 }
 };
 
@@ -138,7 +138,7 @@ static int par_getpin(PROGRAMMER * pgm, int pinfunc)
 
   if (value)
     value = 1;
-    
+
   if (ppipins[pin].inverted)
     inverted = !inverted;
 

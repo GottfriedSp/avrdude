@@ -29,7 +29,7 @@ reg = register as defined in an enum in ppi.h. This must be converted
 */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #if defined (WIN32NATIVE)
 
@@ -60,7 +60,7 @@ typedef struct
     int base_address;
 } winpp;
 
-static const winpp winports[DEVICE_MAX] = 
+static const winpp winports[DEVICE_MAX] =
 {
     {DEVICE_LPT1, 0x378},
     {DEVICE_LPT2, 0x278},
@@ -86,7 +86,7 @@ void ppi_open(char *port, union filedescriptor *fdp)
 {
     unsigned char i;
     int fd;
-	
+
     fd = winnt_pp_open();
 
     if(fd < 0)
@@ -149,7 +149,7 @@ static int winnt_pp_open(void)
     {
         return(-1);
     }
-    else if(ver_info.dwPlatformId == VER_PLATFORM_WIN32_NT) 
+    else if(ver_info.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
         HANDLE h = CreateFile(DRIVERNAME,
             GENERIC_READ,
@@ -316,11 +316,11 @@ static unsigned char reg2offset(int reg)
 static unsigned char inb(unsigned short port)
 {
     unsigned char t;
-    
+
 	asm volatile ("in %1, %0"
         : "=a" (t)
         : "d" (port));
-    
+
 	return t;
 }
 
@@ -342,7 +342,7 @@ int gettimeofday(struct timeval *tv, struct timezone *unused){
 
 	SYSTEMTIME st;
 	GetSystemTime(&st);
-  
+
 	tv->tv_sec=(long)(st.wSecond+st.wMinute*60+st.wHour*3600);
 	tv->tv_usec=(long)(st.wMilliseconds*1000);
 

@@ -24,7 +24,7 @@
  * protocol described in application note avr910.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -378,7 +378,7 @@ static int avr910_open(PROGRAMMER * pgm, char * port)
    * drain any extraneous input
    */
   avr910_drain (pgm, 0);
-	
+
   return 0;
 }
 
@@ -404,7 +404,7 @@ static void avr910_set_addr(PROGRAMMER * pgm, unsigned long addr)
   cmd[0] = 'A';
   cmd[1] = (addr >> 8) & 0xff;
   cmd[2] = addr & 0xff;
-  
+
   avr910_send(pgm, cmd, sizeof(cmd));
   avr910_vfy_cmd_sent(pgm, "set addr");
 }
@@ -492,7 +492,7 @@ static int avr910_read_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 }
 
 
-static int avr910_paged_write_flash(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m, 
+static int avr910_paged_write_flash(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
                                     unsigned int page_size,
                                     unsigned int addr, unsigned int n_bytes)
 {
@@ -615,7 +615,7 @@ static int avr910_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
     cmd = static_cast<char*>(malloc(4 + blocksize));
     if (!cmd) return -1;
-     
+
     cmd[0] = 'B';
     cmd[3] = toupper((int)(m->desc[0]));
 

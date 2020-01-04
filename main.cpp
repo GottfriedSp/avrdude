@@ -25,10 +25,10 @@
  * For parallel port connected programmers, the pin definitions can be
  * changed via a config file.  See the config file for instructions on
  * how to add a programmer definition.
- *  
+ *
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -100,7 +100,7 @@ int    ovsigck;     /* 1=override sig check, 0=don't */
  */
 static void usage(void)
 {
-  avrdude_message(MSG_INFO, 
+  avrdude_message(MSG_INFO,
  "Usage: %s [options]\n"
  "Options:\n"
  "  -p <partno>                Required. Specify AVR device.\n"
@@ -590,7 +590,7 @@ int main(int argc, char * argv [])
         silentsafe = 1;
         safemode = 1;
         break;
-        
+
       case 't': /* enter terminal mode */
         terminal = 1;
         break;
@@ -1088,7 +1088,7 @@ int main(int argc, char * argv [])
         goto main_exit;
       }
     }
-  
+
     sig = avr_locate_mem(p, "signature");
     if (sig == NULL) {
       avrdude_message(MSG_INFO, "%s: WARNING: signature data not defined for device \"%s\"\n",
@@ -1297,26 +1297,26 @@ int main(int argc, char * argv [])
                         "I have given up and exited programming mode\n",
                         progname);
         exitrc = 1;
-        goto main_exit;        
+        goto main_exit;
       }
     }
-    
+
     /* Now check what fuses are against what they should be */
     if (safemodeafter_fuse != safemode_fuse) {
       fuses_updated = 1;
       avrdude_message(MSG_INFO, "%s: safemode: fuse changed! Was %x, and is now %x\n",
               progname, safemode_fuse, safemodeafter_fuse);
 
-              
+
       /* Ask user - should we change them */
-       
+
        if (silentsafe == 0)
             safemode_response = terminal_get_input("Would you like this fuse to be changed back? [y/n] ");
        else
             safemode_response = yes;
-       
+
        if (tolower((int)(safemode_response[0])) == 'y') {
-              
+
             /* Enough chit-chat, time to program some fuses and check them */
             if (safemode_writefuse (safemode_fuse, "fuse", pgm, p,
                                     10) == 0) {
@@ -1335,16 +1335,16 @@ int main(int argc, char * argv [])
       avrdude_message(MSG_INFO, "%s: safemode: lfuse changed! Was %x, and is now %x\n",
               progname, safemode_lfuse, safemodeafter_lfuse);
 
-              
+
       /* Ask user - should we change them */
-       
+
        if (silentsafe == 0)
             safemode_response = terminal_get_input("Would you like this fuse to be changed back? [y/n] ");
        else
             safemode_response = yes;
-       
+
        if (tolower((int)(safemode_response[0])) == 'y') {
-              
+
             /* Enough chit-chat, time to program some fuses and check them */
             if (safemode_writefuse (safemode_lfuse, "lfuse", pgm, p,
                                     10) == 0) {
@@ -1362,7 +1362,7 @@ int main(int argc, char * argv [])
       fuses_updated = 1;
       avrdude_message(MSG_INFO, "%s: safemode: hfuse changed! Was %x, and is now %x\n",
               progname, safemode_hfuse, safemodeafter_hfuse);
-              
+
       /* Ask user - should we change them */
        if (silentsafe == 0)
             safemode_response = terminal_get_input("Would you like this fuse to be changed back? [y/n] ");
@@ -1394,7 +1394,7 @@ int main(int argc, char * argv [])
        else
             safemode_response = yes;
        if (tolower((int)(safemode_response[0])) == 'y') {
-              
+
             /* Enough chit-chat, time to program some fuses and check them */
             if (safemode_writefuse (safemode_efuse, "efuse", pgm, p,
                                     10) == 0) {

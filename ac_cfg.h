@@ -1,5 +1,3 @@
-/* ac_cfg.h.  Generated from ac_cfg.h.in by configure.  */
-/* ac_cfg.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the <ddk/hidsdi.h> header file. */
 /* #undef HAVE_DDK_HIDSDI_H */

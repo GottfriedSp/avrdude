@@ -18,7 +18,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -176,7 +176,7 @@ static int avr_tpi_setup_rw(PROGRAMMER * pgm, AVRMEM * mem,
   return 0;
 }
 
-int avr_read_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem, 
+int avr_read_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
                           unsigned long addr, unsigned char * value)
 {
   unsigned char cmd[4];
@@ -210,7 +210,7 @@ int avr_read_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
     /* load byte */
     cmd[0] = TPI_CMD_SLD;
     r = pgm->cmd_tpi(pgm, cmd, 1, value, 1);
-    if (r == -1) 
+    if (r == -1)
       return -1;
 
     return 0;
@@ -303,7 +303,7 @@ int avr_mem_hiaddr(AVRMEM * mem)
  * If v is non-NULL, verify against v's memory area, only
  * those cells that are tagged TAG_ALLOCATED are verified.
  *
- * Return the number of bytes read, or < 0 if an error occurs.  
+ * Return the number of bytes read, or < 0 if an error occurs.
  */
 int avr_read(PROGRAMMER * pgm, AVRPART * p, char * memtype,
              AVRPART * v)
@@ -464,7 +464,7 @@ int avr_read(PROGRAMMER * pgm, AVRPART * p, char * memtype,
 /*
  * write a page data at the specified address
  */
-int avr_write_page(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem, 
+int avr_write_page(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
                    unsigned long addr)
 {
   unsigned char cmd[4];
@@ -596,7 +596,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
 
   if (!mem->paged &&
       (p->flags & AVRPART_IS_AT90S1200) == 0) {
-    /* 
+    /*
      * check to see if the write is necessary by reading the existing
      * value and only write if we are changing the value; we can't
      * use this optimization for paged addressing.
@@ -677,7 +677,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
   if (readok == 0) {
     /*
      * read operation not supported for this memory type, just wait
-     * the max programming time and then return 
+     * the max programming time and then return
      */
     usleep(mem->max_write_delay); /* maximum write delay */
     pgm->pgm_led(pgm, OFF);
@@ -690,7 +690,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
 
     if ((data == mem->readback[0]) ||
         (data == mem->readback[1])) {
-      /* 
+      /*
        * use an extra long delay when we happen to be writing values
        * used for polled data read-back.  In this case, polling
        * doesn't work, and we need to delay the worst case write time
@@ -727,7 +727,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
      * At this point we either have a valid readback or the
      * max_write_delay is expired.
      */
-    
+
     if (r == data) {
       ready = 1;
     }
@@ -756,7 +756,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
                           progname, progname, progname);
           return -3;
         }
-        
+
         avrdude_message(MSG_INFO, "%s: device was successfully re-initialized\n",
                 progname);
         return 0;
@@ -772,7 +772,7 @@ int avr_write_byte_default(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
        */
       pgm->pgm_led(pgm, OFF);
       pgm->err_led(pgm, ON);
-      
+
       return -6;
     }
   }
@@ -809,7 +809,7 @@ int avr_write_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
   if (strcmp(mem->desc, "efuse")==0) {
       safemode_efuse = data;
   }
-  
+
   safemode_memfuses(1, &safemode_lfuse, &safemode_hfuse, &safemode_efuse, &safemode_fuse);
 
   return pgm->write_byte(pgm, p, mem, addr, data);
@@ -825,7 +825,7 @@ int avr_write_byte(PROGRAMMER * pgm, AVRPART * p, AVRMEM * mem,
  *
  * Return the number of bytes written, or -1 if an error occurs.
  */
-int avr_write(PROGRAMMER * pgm, AVRPART * p, char * memtype, int size, 
+int avr_write(PROGRAMMER * pgm, AVRPART * p, char * memtype, int size,
               int auto_erase)
 {
   int              rc;

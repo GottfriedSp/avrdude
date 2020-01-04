@@ -20,8 +20,7 @@
 #ifndef libavrdude_h
 #define libavrdude_h
 
-/* XXX should go away */
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdio.h>
 #include <limits.h>
@@ -65,16 +64,16 @@ typedef void * LNODEID;
 
 #define PUSH(s,d)    lins_n(s,d,1)   /* push 'd' onto the stack */
 #define POP(s)       lrmv_n(s,1)     /* pop the stack */
-#define LOOKSTACK(s) lget_n(s,1)     /* look at the top of the stack, 
+#define LOOKSTACK(s) lget_n(s,1)     /* look at the top of the stack,
 					but don't pop */
 
 
 #define ENQUEUE(q,d) lins_n(q,d,1)   /* put 'd' on the end of the queue */
-#define DEQUEUE(q)   lrmv(q)         /* remove next item from the front of 
+#define DEQUEUE(q)   lrmv(q)         /* remove next item from the front of
 					the queue */
 #define REQUEUE(q,d) ladd(q,d)       /* re-insert (push) item back on the
 					front of the queue */
-#define LOOKQUEUE(q) lget(q)         /* return next item on the queue, 
+#define LOOKQUEUE(q) lget(q)         /* return next item on the queue,
 					but don't dequeue */
 #define QUEUELEN(q)  lsize(q)       /* length of the queue */
 
@@ -101,10 +100,10 @@ void     * ldata  ( LNODEID ); /* data at the current position */
 int        lsize  ( LISTID  ); /* number of elements in the list */
 
 int        ladd     ( LISTID lid, void * p );
-int        laddo    ( LISTID lid, void *p, 
+int        laddo    ( LISTID lid, void *p,
 		      int (*compare)(const void *p1,const void *p2),
 		      LNODEID * firstdup );
-int        laddu    ( LISTID lid, void * p, 
+int        laddu    ( LISTID lid, void * p,
 		      int (*compare)(const void *p1,const void *p2));
 int        lins_n   ( LISTID lid, void * d, unsigned int n );
 int        lins_ln  ( LISTID lid, LNODEID lnid, void * data_ptr );
@@ -467,7 +466,7 @@ int pgm_fill_old_pins(struct programmer_t * const pgm);
 
 /**
  * This function checks all pin of pgm against the constraints given in the checklist.
- * It checks if 
+ * It checks if
  * @li any invalid pins are used
  * @li valid pins are used inverted when not allowed
  * @li any pins are used by more than one function
@@ -487,7 +486,7 @@ int pins_check(const struct programmer_t * const pgm, const struct pin_checklist
 
 /**
  * Returns the name of the pin as string.
- * 
+ *
  * @param pinname the pinname which we want as string.
  * @returns a string with the pinname, or <unknown> if pinname is invalid.
  */
@@ -555,7 +554,7 @@ union pinfo
 struct serial_device
 {
   // open should return -1 on error, other values on success
-  int (*open)(char * port, union pinfo pinfo, union filedescriptor *fd); 
+  int (*open)(char * port, union pinfo pinfo, union filedescriptor *fd);
   int (*setspeed)(union filedescriptor *fd, long baud);
   void (*close)(union filedescriptor *fd);
 
@@ -663,7 +662,7 @@ typedef struct programmer_t {
                           unsigned char *res, int count);
   int  (*open)           (struct programmer_t * pgm, char * port);
   void (*close)          (struct programmer_t * pgm);
-  int  (*paged_write)    (struct programmer_t * pgm, AVRPART * p, AVRMEM * m, 
+  int  (*paged_write)    (struct programmer_t * pgm, AVRPART * p, AVRMEM * m,
                           unsigned int page_size, unsigned int baseaddr,
                           unsigned int n_bytes);
   int  (*paged_load)     (struct programmer_t * pgm, AVRPART * p, AVRMEM * m,
@@ -835,7 +834,7 @@ int safemode_writefuse (unsigned char fuse, char * fusename, PROGRAMMER * pgm, A
 
 /* Reads the fuses three times, checking that all readings are the same. This will ensure that the before values aren't in error! */
 int safemode_readfuses (unsigned char * lfuse, unsigned char * hfuse, unsigned char * efuse, unsigned char * fuse, PROGRAMMER * pgm, AVRPART * p);
-  
+
 /* This routine will store the current values pointed to by lfuse, hfuse, and efuse into an internal buffer in this routine
 when save is set to 1. When save is 0 (or not 1 really) it will copy the values from the internal buffer into the locations
 pointed to be lfuse, hfuse, and efuse. This allows you to change the fuse bits if needed from another routine (ie: have it so

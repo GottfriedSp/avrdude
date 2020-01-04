@@ -38,7 +38,7 @@ int avrdude_message(const int msglvl, const char *format, ...);
 
 #if defined(WIN32NATIVE)
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 #include <windows.h>
 
 #ifdef __cplusplus

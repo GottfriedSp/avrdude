@@ -1,4 +1,4 @@
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -34,7 +34,7 @@ avrftdi_debug_frame(uint16_t frame)
 		{
 			line0[2*pos]  = '_';
 			line0[2*pos+1] = ' ';
-			
+
 			line2[2*pos]  = ' ';
 			line2[2*pos+1] = ' ';
 		}
@@ -42,14 +42,14 @@ avrftdi_debug_frame(uint16_t frame)
 		{
 			line0[2*pos]  = ' ';
 			line0[2*pos+1] = ' ';
-			
+
 			line2[2*pos]  = '-';
 			line2[2*pos+1] = ' ';
 		}
-			
+
 		line1[2*pos]  = bit_name[pos];
 		line1[2*pos+1] = ' ';
-			
+
 	}
 
 	line0[32] = 0;
@@ -94,7 +94,7 @@ avrftdi_tpi_initialize(PROGRAMMER * pgm, AVRPART * p)
 	pgm->setpin(pgm, PIN_AVR_RESET, OFF);
 	/*wait at least 20ms bevor issuing spi commands to avr */
 	usleep(20 * 1000);
-	
+
 	log_info("Sending 16 init clock cycles ...\n");
 	ret = ftdi_write_data(pdata->ftdic, buf, sizeof(buf));
 
@@ -113,7 +113,7 @@ tpi_byte2frame(uint8_t byte)
 
 	if(parity)
 		frame |= TPI_PARITY_MASK;
-	
+
 	return frame;
 }
 
@@ -150,15 +150,15 @@ avrftdi_tpi_write_byte(PROGRAMMER * pgm, unsigned char byte)
 	unsigned char buffer[] = { MPSSE_DO_WRITE | MPSSE_WRITE_NEG | MPSSE_LSB, 1, 0, 0, 0 };
 
 	frame = tpi_byte2frame(byte);
-	
+
 	buffer[3] = frame & 0xff;
 	buffer[4] = frame >> 8;
-	
+
 	log_trace("Byte %02x, frame: %04x, MPSSE: 0x%02x 0x%02x 0x%02x  0x%02x 0x%02x\n",
 			byte, frame, buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
 
 	//avrftdi_debug_frame(frame);
-	
+
 	E(ftdi_write_data(ftdic, buffer, sizeof(buffer)) != sizeof(buffer), ftdic);
 
 	return 0;
@@ -171,11 +171,11 @@ static int
 avrftdi_tpi_read_byte(PROGRAMMER * pgm, unsigned char * byte)
 {
 	uint16_t frame;
-	
+
 	/* use 2 guard bits, 2 default idle bits + 12 frame bits = 16 bits total */
 	const int bytes = 3;
 	int err, i = 0;
-	
+
 	unsigned char buffer[4];
 
 	buffer[0] = MPSSE_DO_READ | MPSSE_LSB;
@@ -203,10 +203,10 @@ avrftdi_tpi_read_byte(PROGRAMMER * pgm, unsigned char * byte)
 
 
 	frame = buffer[0] | (buffer[1] << 8);
-	
+
 	err = tpi_frame2byte(frame, byte);
 	log_trace("Frame: 0x%04x, byte: 0x%02x\n", frame, *byte);
-	
+
 	//avrftdi_debug_frame(frame);
 
 	return err;

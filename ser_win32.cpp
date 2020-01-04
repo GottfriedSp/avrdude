@@ -22,7 +22,7 @@
  * Native Win32 serial interface for avrdude.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #if defined(WIN32NATIVE)
 
@@ -416,7 +416,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 
 	if (hComPort == INVALID_HANDLE_VALUE) {
 		avrdude_message(MSG_INFO, "%s: ser_send(): port not open\n",
-              progname); 
+              progname);
 		return -1;
 	}
 
@@ -441,7 +441,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 		}
       avrdude_message(MSG_INFO, "\n");
 	}
-	
+
 	serial_w32SetTimeOut(hComPort,500);
 
 	if (!WriteFile (hComPort, buf, buflen, &written, NULL)) {
@@ -452,7 +452,7 @@ static int ser_send(union filedescriptor *fd, const unsigned char * buf, size_t 
 
 	if (written != buflen) {
 		avrdude_message(MSG_INFO, "%s: ser_send(): size/send mismatch\n",
-              progname); 
+              progname);
 		return -1;
 	}
 
@@ -569,20 +569,20 @@ static int ser_recv(union filedescriptor *fd, unsigned char * buf, size_t buflen
 	DWORD read;
 
 	HANDLE hComPort=(HANDLE)fd->pfd;
-	
+
 	if (hComPort == INVALID_HANDLE_VALUE) {
 		avrdude_message(MSG_INFO, "%s: ser_read(): port not open\n",
-              progname); 
+              progname);
 		return -1;
 	}
-	
+
 	serial_w32SetTimeOut(hComPort, serial_recv_timeout);
-	
+
 	if (!ReadFile(hComPort, buf, buflen, &read, NULL)) {
 		LPVOID lpMsgBuf;
-		FormatMessage( 
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-			FORMAT_MESSAGE_FROM_SYSTEM | 
+		FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
 			FORMAT_MESSAGE_IGNORE_INSERTS,
 			NULL,
 			GetLastError(),
@@ -639,12 +639,12 @@ static int ser_drain(union filedescriptor *fd, int display)
 
   	if (hComPort == INVALID_HANDLE_VALUE) {
 		avrdude_message(MSG_INFO, "%s: ser_drain(): port not open\n",
-              progname); 
+              progname);
 		return -1;
 	}
 
 	serial_w32SetTimeOut(hComPort,250);
-  
+
 	if (display) {
 		avrdude_message(MSG_INFO, "drain>");
 	}
@@ -653,9 +653,9 @@ static int ser_drain(union filedescriptor *fd, int display)
 		readres=ReadFile(hComPort, buf, 1, &read, NULL);
 		if (!readres) {
 			LPVOID lpMsgBuf;
-			FormatMessage( 
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-				FORMAT_MESSAGE_FROM_SYSTEM | 
+			FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER |
+				FORMAT_MESSAGE_FROM_SYSTEM |
 				FORMAT_MESSAGE_IGNORE_INSERTS,
 				NULL,
 				GetLastError(),

@@ -21,7 +21,7 @@
  * USB interface via libhidapi for avrdude.
  */
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 #if defined(HAVE_LIBHIDAPI)
 
 

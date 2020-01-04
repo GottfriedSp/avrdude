@@ -24,7 +24,7 @@
 
 #if !defined(WIN32NATIVE)
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -100,10 +100,10 @@ static int ser_setspeed(union filedescriptor *fd, long baud)
   int rc;
   struct termios termios;
   speed_t speed = serial_baud_lookup (baud);
-  
+
   if (!isatty(fd->ifd))
     return -ENOTTY;
-  
+
   /*
    * initialize terminal modes
    */
@@ -469,7 +469,7 @@ static int ser_drain(union filedescriptor *fd, int display)
       if (display) {
         avrdude_message(MSG_INFO, "<drain\n");
       }
-      
+
       break;
     }
     else if (nfds == -1) {

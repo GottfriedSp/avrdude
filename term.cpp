@@ -17,7 +17,7 @@
  */
 
 
-#include "ac_cfg.h"
+#include "portable/arch.h"
 
 #include <ctype.h>
 #include <string.h>
@@ -722,7 +722,7 @@ static int cmd_help(PROGRAMMER * pgm, struct avrpart * p,
     fprintf(stdout, cmd[i].desc, cmd[i].name);
     fprintf(stdout, "\n");
   }
-  fprintf(stdout, 
+  fprintf(stdout,
           "\nUse the 'part' command to display valid memory types for use with the\n"
           "'dump' and 'write' commands.\n\n");
 
@@ -790,9 +790,9 @@ static int tokenize(char * s, char *** argv)
 
   slen = strlen(s);
 
-  /* 
+  /*
    * initialize allow for 20 arguments, use realloc to grow this if
-   * necessary 
+   * necessary
    */
   nargs   = 20;
   bufsize = slen + 20;
@@ -828,7 +828,7 @@ static int tokenize(char * s, char *** argv)
     }
   }
 
-  /* 
+  /*
    * We have parsed all the args, n == argc, bufv contains an array of
    * pointers to each arg, and buf points to one memory block that
    * contains all the args, back to back, seperated by a nul
@@ -921,7 +921,7 @@ int terminal_mode(PROGRAMMER * pgm, struct avrpart * p)
 
   rc = 0;
   while ((cmdbuf = terminal_get_input("avrdude> ")) != NULL) {
-    /* 
+    /*
      * find the start of the command, skipping any white space
      */
     q = cmdbuf;
