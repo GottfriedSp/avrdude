@@ -77,7 +77,7 @@ LINK_OBJECTS = main.o
 
 all : depend ${TARGET} doc $(MAKE_WINDOWS_LOADDRV)
 
-.PHONY: windows doc
+.PHONY: windows doc .depend
 
 doc:
 	make -C doc

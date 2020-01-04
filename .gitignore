@@ -2,6 +2,7 @@
 *.flex.cpp
 *.tab.cpp
 *.tab.h
+*.o
 .vs
 bin
 *.opendb
