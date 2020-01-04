@@ -1,6 +1,6 @@
 ## -*- mode: rpm-spec; -*-
 ##
-## @configure_input@
+## avrdude.spec
 ##
 
 %define debug_package %{nil}
@@ -10,7 +10,7 @@
 
 Summary: AVRDUDE is software for programming Atmel AVR Microcontrollers.
 Name: avrdude
-Version: @VERSION@
+Version: 6.3-20171130
 Release: 1
 URL: http://savannah.nongnu.org/projects/avrdude
 Source0: %{name}-%{version}.tar.gz
@@ -35,15 +35,10 @@ Documentation for avrdude in info, html, postscript and pdf formats.
 
 %build
 
-./configure --prefix=%{_prefix} --sysconfdir=/etc --mandir=%{_mandir} \
-	--infodir=%{_infodir} \
-%if %{_with_docs}
-	--enable-doc=yes
-%else
-	--enable-doc=no
-%endif
-
 make
+%if %{_with_docs}
+make doc
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT

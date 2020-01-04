@@ -281,7 +281,7 @@ prog_def :
         yyerror("programmer type not specified");
         YYABORT;
       }
-      id = ldata(lfirst(current_prog->id));
+      id = static_cast<char*>(ldata(lfirst(current_prog->id)));
       existing_prog = locate_programmer(programmers, id);
       if (existing_prog) {
         { /* temporarly set lineno to lineno of programmer start */
@@ -351,7 +351,7 @@ part_def :
        * page-addressed memories.
        */
       for (ln=lfirst(current_part->mem); ln; ln=lnext(ln)) {
-        m = ldata(ln);
+        m = static_cast<AVRMEM*>(ldata(ln));
         if (m->paged) {
           if (m->page_size == 0) {
             yyerror("must specify page_size for paged memory");
@@ -447,7 +447,7 @@ prog_parm :
       char *s;
       int do_yyabort = 0;
       while (lsize(string_list)) {
-        t = lrmv_n(string_list, 1);
+        t = static_cast<TOKEN*>(lrmv_n(string_list, 1));
         if (!do_yyabort) {
           s = dup_string(t->value.string);
           if (s == NULL) {
@@ -563,7 +563,7 @@ usb_pid_list:
       current_prog->usbpid = lcreat(NULL, 0);
     }
     {
-      int *ip = malloc(sizeof(int));
+      int *ip = static_cast<int*>(malloc(sizeof(int)));
       if (ip) {
         *ip = $1->value.number;
         ladd(current_prog->usbpid, ip);
@@ -573,7 +573,7 @@ usb_pid_list:
   } |
   usb_pid_list TKN_COMMA TKN_NUMBER {
     {
-      int *ip = malloc(sizeof(int));
+      int *ip = static_cast<int*>(malloc(sizeof(int)));
       if (ip) {
         *ip = $3->value.number;
         ladd(current_prog->usbpid, ip);
@@ -735,7 +735,7 @@ part_parm :
 
       memset(current_part->controlstack, 0, CTL_STACK_SIZE);
       while (lsize(number_list)) {
-        t = lrmv_n(number_list, 1);
+        t = static_cast<TOKEN*>(lrmv_n(number_list, 1));
 	if (nbytes < CTL_STACK_SIZE)
 	  {
 	    current_part->controlstack[nbytes] = t->value.number;
@@ -766,7 +766,7 @@ part_parm :
 
       memset(current_part->controlstack, 0, CTL_STACK_SIZE);
       while (lsize(number_list)) {
-        t = lrmv_n(number_list, 1);
+        t = static_cast<TOKEN*>(lrmv_n(number_list, 1));
 	if (nbytes < CTL_STACK_SIZE)
 	  {
 	    current_part->controlstack[nbytes] = t->value.number;
@@ -796,7 +796,7 @@ part_parm :
 
       memset(current_part->flash_instr, 0, FLASH_INSTR_SIZE);
       while (lsize(number_list)) {
-        t = lrmv_n(number_list, 1);
+        t = static_cast<TOKEN*>(lrmv_n(number_list, 1));
 	if (nbytes < FLASH_INSTR_SIZE)
 	  {
 	    current_part->flash_instr[nbytes] = t->value.number;
@@ -826,7 +826,7 @@ part_parm :
 
       memset(current_part->eeprom_instr, 0, EEPROM_INSTR_SIZE);
       while (lsize(number_list)) {
-        t = lrmv_n(number_list, 1);
+        t = static_cast<TOKEN*>(lrmv_n(number_list, 1));
 	if (nbytes < EEPROM_INSTR_SIZE)
 	  {
 	    current_part->eeprom_instr[nbytes] = t->value.number;
@@ -1454,7 +1454,7 @@ static int assign_pin_list(int invert)
 
   current_prog->pinno[pin_name] = 0;
   while (lsize(number_list)) {
-    t = lrmv_n(number_list, 1);
+    t = static_cast<TOKEN*>(lrmv_n(number_list, 1));
     if (rv == 0) {
       pin = t->value.number;
       if ((pin < PIN_MIN) || (pin > PIN_MAX)) {
@@ -1506,7 +1506,7 @@ static int parse_cmdbits(OPCODE * op)
   bitno = 32;
   while (lsize(string_list)) {
 
-    t = lrmv_n(string_list, 1);
+    t = static_cast<TOKEN*>(lrmv_n(string_list, 1));
 
     s = strtok_r(t->value.string, " ", &brkt);
     while (rv == 0 && s != NULL) {

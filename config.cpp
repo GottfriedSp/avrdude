@@ -29,20 +29,21 @@
 #include "libavrdude.h"
 #include "config.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
 
-#include "config_gram.h"
+#include "config_gram.tab.h"
 #ifdef HAVE_YYLEX_DESTROY
 /* reset lexer and free any allocated memory */
 int yylex_destroy(void);
 #endif
-int yywrap();
 
-#ifdef __cplusplus
-}
-#endif
+extern "C" int yywrap();
+
+//#ifdef __cplusplus
+//}
+//#endif
 
 char default_programmer[MAX_STR_CONST];
 char default_parallel[PATH_MAX];

@@ -31,7 +31,7 @@
 #include "libavrdude.h"
 #include "config.h"
 
-#include "config_gram.h"
+#include "config_gram.tab.h"
 
 #ifndef YYERRCODE
 #define YYERRCODE 256
@@ -80,14 +80,14 @@ SIGN     [+-]
         
         comment_start = lineno;
         while (1) {
-          while (((c = input()) != '*') && (c != EOF)) {
+          while (((c = yyinput()) != '*') && (c != EOF)) {
             /* eat up text of comment, but keep counting lines */
             if (c == '\n')
               lineno++;
           }
           
           if (c == '*') {
-            while ((c = input()) == '*')
+            while ((c = yyinput()) == '*')
               ;
             if (c == '/')
               break;    /* found the end */

@@ -1,13 +1,14 @@
 See the documentation file for the details.
 
-forked from http://savannah.nongnu.org/projects/avrdude
+The latest version of AVRDUDE is always available here:
+
+  http://savannah.nongnu.org/projects/avrdude
 
 
 Important environment variables for ./configure:
 ================================================
 
-CPPFLAGS: C preprocessor flags
-CXXFLAGS: C++ preprocessor flags
+CPPFLAGS: C preprocessor flags (*not* "C++")
 
 This is the place to put additional (non-standard) -I options into.
 For example, if your Windows system has LibUSB-Win32 installed into
