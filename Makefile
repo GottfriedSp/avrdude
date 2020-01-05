@@ -1,4 +1,5 @@
 
+include make-platform.mk
 
 TARGET       = avrdude
 
@@ -22,19 +23,37 @@ LDFLAGS      =
 #zusaetzliche Ausgabe Datei *.output -v
 YFLAGS       = -t -v
 
-LEXLIB = -lfl
-LIBELF = -lelf
-LIBFTDI =
-LIBFTDI1 = -lftdi1
-LIBHID =
-LIBHIDAPI =
-LIBPTHREAD = -lpthread
-LIBUSB = -lusb
+LIBELF     = -lelf
+LIBFTDI    = -lftdi -lusb
+LIBFTDI1   = -lftdi1
+LIBHID     =
+LIBHIDAPI  =
+LIBUSB     = -lusb
 LIBUSB_1_0 = -lusb-1.0
+LIBPTHREAD = -lpthread
 LIPO =
+LEXLIB = -lfl
 
-LIBS = 
-LIBS += $(LEXLIB) $(LIBUSB_1_0) $(LIBUSB) $(LIBFTDI) $(LIBFTDI1) $(LIBHID) $(LIBELF) $(LIBPTHREAD) -lm
+ifdef HAVE_LIBELF
+LIBS += $(LIBELF)
+endif
+ifdef HAVE_LIBFTDI
+LIBS += $(LIBFTDI)
+endif
+ifdef HAVE_LIBFTDI1
+LIBS += $(LIBFTDI1)
+endif
+ifdef HAVE_LIBUSB
+LIBS += $(LIBUSB)
+endif
+ifdef HAVE_LIBUSB_1_0
+LIBS += $(LIBUSB_1_0)
+endif
+ifdef HAVE_LIBPTHREAD
+LIBS += $(LIBPTHREAD)
+endif
+
+LIBS += $(LEXLIB) -lm
 
 ifdef COMSPEC
 # Windows
@@ -64,10 +83,10 @@ SRCS = $(SOURCE_FILES)
 OBJS = $(subst .cpp,.o,$(SOURCE_FILES))
 
 FLEX_SOURCE  = $(wildcard *.l)
-FLEX_FILES   = $(subst l,flex.cpp,$(FLEX_SOURCE))
+FLEX_FILES   = $(subst .l,.flex.cpp,$(FLEX_SOURCE))
 BISON_SOURCE = $(wildcard *.y)
-BISON_FILES  = $(subst y,tab.cpp,$(BISON_SOURCE))
-BISON_HEADERS= $(subst y,tab.h,$(BISON_SOURCE))
+BISON_FILES  = $(subst .y,.tab.cpp,$(BISON_SOURCE))
+BISON_HEADERS= $(subst .y,.tab.h,$(BISON_SOURCE))
 BISON_OBJ_FILES =  $(subst .y,.tab.o,$(BISON_SOURCE)) \
 		   $(subst .l,.flex.o,$(FLEX_SOURCE))
 
@@ -75,7 +94,7 @@ OBJ_FILES = $(BISON_OBJ_FILES) $(OBJS)
 
 LINK_OBJECTS = main.o
 
-all : depend ${TARGET} doc $(MAKE_WINDOWS_LOADDRV)
+all: printlibs depend ${TARGET} doc $(MAKE_WINDOWS_LOADDRV)
 
 .PHONY: windows doc .depend
 
@@ -94,7 +113,7 @@ ${TARGET} : main.o $(OBJ_FILES)
 	${LINK} ${LDFLAGS} -o $(TARGET)$(EXT) $^ ${LIBS}
 
 clean:
-	rm -f *.o ${OBJ_FILES} $(FLEX_FILES) $(BISON_FILES) $(BISON_HEADERS) ${TARGET} *.output  *.exe
+	rm -f *.o ${OBJ_FILES} $(FLEX_FILES) $(BISON_FILES) $(BISON_HEADERS) ${TARGET} *.output .depend *.exe
 	make -C doc clean
 	make -C windows clean
 
@@ -136,15 +155,26 @@ ${CONFIGDIR}/avrdude.conf : avrdude.conf.sample
 .SUFFIXES: .c .y .l
 
 %.tab.cpp: %.y
-	${YACC} ${YFLAGS} --output=$@ --defines=$(subst .y,.tab.h,$^) $<
+	${YACC} ${YFLAGS} --output=$@ --defines=$(subst .cpp,.h,$@) $<
 
 %.flex.cpp: %.l
 	${LEX} --outfile=$@ $<
 
-depend:
-	@if [ ! -f y.tab.h ]; then touch y.tab.h; fi
-	@${MAKE} config_gram.tab.cpp lexer.flex.cpp
-	@${CC} ${CFLAGS} -MM ${SRCS} > .depend
+
+
+
+printlibs:
+	@echo "HAVE_LIBELF     = $(HAVE_LIBELF)"
+	@echo "HAVE_LIBFTDI    = $(HAVE_LIBFTDI)"
+	@echo "HAVE_LIBFTDI1   = $(HAVE_LIBFTDI1)"
+	@echo "HAVE_LIBUSB     = $(HAVE_LIBUSB)"
+	@echo "HAVE_LIBUSB_1_0 = $(HAVE_LIBUSB_1_0)"
+	@echo "HAVE_LIBPTHREAD = $(HAVE_LIBPTHREAD)"
+
+
+depend: config_gram.tab.cpp config_gram.y lexer.flex.cpp lexer.l
+	@if [ ! -f config_gram.tab.h ]; then touch config_gram.tab.h; fi
+	${CXX} ${CXXFLAGS} -MM ${SRCS} > .depend
 
 
 include .depend
