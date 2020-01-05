@@ -94,7 +94,7 @@ OBJ_FILES = $(BISON_OBJ_FILES) $(OBJS)
 
 LINK_OBJECTS = main.o
 
-all: printlibs depend ${TARGET} doc $(MAKE_WINDOWS_LOADDRV)
+all: printlibs depend $(TARGET) $(MAKE_WINDOWS_LOADDRV)
 
 .PHONY: windows doc .depend
 
@@ -113,9 +113,13 @@ ${TARGET} : main.o $(OBJ_FILES)
 	${LINK} ${LDFLAGS} -o $(TARGET)$(EXT) $^ ${LIBS}
 
 clean:
-	rm -f *.o ${OBJ_FILES} $(FLEX_FILES) $(BISON_FILES) $(BISON_HEADERS) ${TARGET} *.output .depend *.exe
+	rm -f *.o ${OBJ_FILES} $(FLEX_FILES) $(BISON_FILES) $(BISON_HEADERS) ${TARGET} *.output *.exe
 	make -C doc clean
 	make -C windows clean
+
+distclean:
+	make clean
+	rm -rf .depend
 
 install : dirs                             \
 	  ${BINDIR}/${TARGET}              \

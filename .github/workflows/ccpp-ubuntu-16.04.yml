@@ -12,4 +12,4 @@ jobs:
     - name: install prerequisites
       run: sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libftdi1-dev libhidapi-dev texinfo texlive texi2html bison flex
     - name: make
-      run: make
+      run: make all doc
