@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: install prerequisites
-      run: sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libftdi1-dev libhidapi-dev texinfo texlive texi2html bison flex
+      run: sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libftdi1-dev libhidapi-dev libreadline-dev texinfo texlive texi2html bison flex
     - name: make
       run: make all doc

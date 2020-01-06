@@ -30,11 +30,11 @@ else
 #Debian / raspbian
 ## debian
 ##   sudo apt-get install bison flex make gcc
-##   sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libftdi1-dev libhidapi-dev
+##   sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libreadline-dev libhidapi-dev libftdi1-dev
 ##   sudo apt-get install texi2html texinfo texlive     # for doc
 ## raspbian
 ##   sudo apt-get install bison flex make gcc
-##   sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libhidapi-dev
+##   sudo apt-get install libelf-dev libusb-dev libusb-1.0-0-dev libftdi-dev libreadline-dev libhidapi-dev
 ##   sudo apt-get install texi2html texinfo texlive     # for doc
 
 HAVE_LIBELF     := $(shell /sbin/ldconfig -p |grep libelf.so        | awk '{split($$1,a,"-");print a[1]}' )
