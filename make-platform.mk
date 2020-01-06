@@ -1,4 +1,6 @@
 
+## TODO: a better option would be to search in /usr/include if header files exists
+
 ifdef COMSPEC
 #Cygwin
 ##  Cygwin Pakete installieren:
