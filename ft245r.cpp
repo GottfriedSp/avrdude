@@ -72,13 +72,9 @@
 #endif
 
 #if defined(HAVE_LIBFTDI1) && defined(HAVE_LIBUSB_1_0)
-# if defined(HAVE_LIBUSB_1_0_LIBUSB_H)
-#  include <libusb-1.0/libusb.h>
-# else
-#  include <libusb.h>
-# endif
+# include <libusb.h>
 # include <libftdi1/ftdi.h>
-#elif defined(HAVE_LIBFTDI) && defined(HAVE_USB_H)
+#elif defined(HAVE_LIBFTDI)
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
 #else
@@ -86,7 +82,7 @@
 #define DO_NOT_BUILD_FT245R
 #endif
 
-#ifndef HAVE_PTHREAD_H
+#ifndef HAVE_LIBPTHREAD
 
 static int ft245r_nopthread_open (struct programmer_t *pgm, char * name) {
     avrdude_message(MSG_INFO, "%s: error: no pthread support. Please compile again with pthread installed."

@@ -23,13 +23,7 @@
 #include "portable/arch.h"
 
 #ifdef HAVE_LIBUSB
-#if defined(HAVE_USB_H)
-#  include <usb.h>
-#elif defined(HAVE_LUSB0_USB_H)
-#  include <lusb0_usb.h>
-#else
-#  error "libusb needs either <usb.h> or <lusb0_usb.h>"
-#endif
+# include <usb.h>
 #endif
 
 #include <limits.h>

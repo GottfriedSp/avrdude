@@ -4,15 +4,10 @@
 #include <stdint.h>
 
 #if defined(HAVE_LIBFTDI1) && defined(HAVE_LIBUSB_1_0)
-# if defined(HAVE_LIBUSB_1_0_LIBUSB_H)
-#  include <libusb-1.0/libusb.h>
-# else
-#  include <libusb.h>
-# endif
+# include <libusb.h>
 # include <libftdi1/ftdi.h>
-# undef HAVE_LIBFTDI_TYPE_232H
-# define HAVE_LIBFTDI_TYPE_232H 1
-#elif defined(HAVE_LIBFTDI) && defined(HAVE_USB_H)
+# define HAVE_LIBFTDI_TYPE_232H
+#elif defined(HAVE_LIBFTDI)
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
 #else

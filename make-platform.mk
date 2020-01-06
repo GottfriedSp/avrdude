@@ -1,17 +1,30 @@
 
 ifdef COMSPEC
 #Cygwin
-PLATFORMLIBPATH := /usr/lib
 ##  Cygwin Pakete installieren:
-##    libftdi1-devel libelf-devel libhidapi-devel libusb-devel libusb1.0-devel
+##    libftdi1-devel libelf-devel libhidapi-devel libusb-devel libusb1.0-devel libreadline-devel
 ##    libtool texi2html texinfo-tex
 
+PLATFORMLIBPATH := /usr/lib
+PLATFORM_CYGWINLIBROOT    := /usr/i686-pc-cygwin/sys-root/usr/lib
+PLATFORM_CYGWINLIBROOTWIN := /usr/i686-pc-cygwin/sys-root/usr/lib/w32api
 HAVE_LIBELF     := $(and $(wildcard $(PLATFORMLIBPATH)/libelf.a),1)
 HAVE_LIBFTDI    := $(and $(wildcard $(PLATFORMLIBPATH)/libftdi.a),1)
 HAVE_LIBFTDI1   := $(and $(wildcard $(PLATFORMLIBPATH)/libftdi1.a),1)
 HAVE_LIBUSB     := $(and $(wildcard $(PLATFORMLIBPATH)/libusb.dll.a),1)
 HAVE_LIBUSB_1_0 := $(and $(wildcard $(PLATFORMLIBPATH)/libusb-1.0.dll.a),1)
 HAVE_LIBPTHREAD := $(and $(wildcard $(PLATFORMLIBPATH)/libpthread.a),1)
+HAVE_HID        := $(and $(wildcard $(PLATFORMLIBPATH)/libhid.dll.a),1)
+HAVE_HIDAPI     := $(and $(wildcard $(PLATFORMLIBPATH)/libhidapi.dll.a),1)
+HAVE_READLINE   := $(and $(wildcard $(PLATFORMLIBPATH)/libreadline.a),1)
+
+HAVE_WS2_32     := $(and $(wildcard $(PLATFORM_CYGWINLIBROOTWIN)/libws3_32.a),1) 
+
+ifdef HAVE_WS2_32
+PLATFORM_LIBS     += -lws2_32
+PLATFORM_CXXFLAGS += -DHAVE_LIBWS2_32
+endif
+PLATFORM_CXXFLAGS += -DWIN32NATIVE
 
 else
 #Debian / raspbian
@@ -31,8 +44,82 @@ HAVE_LIBFTDI1   := $(shell /sbin/ldconfig -p |grep libftdi1.so      | awk '{spli
 #HAVE_LIBUSB     := $(shell /sbin/ldconfig -p |grep libusb.so       | awk '{split($$1,a,"-");print a[1]}' )
 HAVE_LIBUSB_1_0 := $(shell /sbin/ldconfig -p |grep libusb-1.0.so    | awk '{split($$1,a,"-");print a[1]}' )
 HAVE_LIBPTHREAD := $(shell /sbin/ldconfig -p |grep libpthread.so    | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_HID        := $(shell /sbin/ldconfig -p |grep libhid.so        | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_HIDAPI     := $(shell /sbin/ldconfig -p |grep libhidapi.so     | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_READLINE   := $(shell /sbin/ldconfig -p |grep libreadline.so   | awk '{split($$1,a,"-");print a[1]}' )
 
+PLATFORM_CXXFLAGS += -DHAVE_LINUXGPIO
 
 endif
 
+
+
+#set libraries
+
+ifdef HAVE_LIBELF
+PLATFORM_LIBS += -lelf
+endif
+ifdef HAVE_LIBFTDI
+PLATFORM_LIBS += -lftdi -lusb
+endif
+ifdef HAVE_LIBFTDI1
+PLATFORM_LIBS += -lftdi1
+endif
+ifdef HAVE_LIBUSB
+PLATFORM_LIBS += -lusb
+endif
+ifdef HAVE_LIBUSB_1_0
+PLATFORM_LIBS += -lusb-1.0
+endif
+ifdef HAVE_HID
+PLATFORM_LIBS += -lhid
+endif
+ifdef HAVE_HIDAPI
+PLATFORM_LIBS += -lhidapi
+endif
+ifdef HAVE_LIBPTHREAD
+PLATFORM_LIBS += -lpthread
+endif
+ifdef HAVE_READLINE
+PLATFORM_LIBS  += -lreadline
+endif
+
+
+
+#### defines can be set here ####
+ifdef HAVE_LIBELF
+PLATFORM_CXXFLAGS += -DHAVE_LIBELF
+endif
+ifdef HAVE_LIBFTDI
+PLATFORM_CXXFLAGS += -DHAVE_LIBFTDI
+endif
+ifdef HAVE_LIBFTDI1
+PLATFORM_CXXFLAGS += -DHAVE_LIBFTDI1
+endif
+ifdef HAVE_LIBUSB
+PLATFORM_CXXFLAGS += -DHAVE_LIBUSB
+endif
+ifdef HAVE_LIBUSB_1_0
+PLATFORM_CXXFLAGS += -DHAVE_LIBUSB_1_0
+endif
+ifdef HAVE_HID
+PLATFORM_CXXFLAGS += -DHAVE_LIBHID
+endif
+ifdef HAVE_HIDAPI
+PLATFORM_CXXFLAGS += -DHAVE_LIBHIDAPI
+endif
+ifdef HAVE_LIBPTHREAD
+PLATFORM_CXXFLAGS += -DHAVE_LIBPTHREAD
+endif
+ifdef HAVE_READLINE
+PLATFORM_CXXFLAGS += -DHAVE_LIBREADLINE
+endif
+
+
+#### additional include paths can be set here ####
+#example
+#PLATFORM_INCLUDES += -I.
+
+#if HAVE_LIBUSB_1_0
+PLATFORM_INCLUDES += -I/usr/include/libusb-1.0
 

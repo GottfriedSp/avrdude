@@ -50,19 +50,9 @@
 #endif
 
 #if defined(USE_LIBUSB_1_0)
-# if defined(HAVE_LIBUSB_1_0_LIBUSB_H)
-#  include <libusb-1.0/libusb.h>
-# else
-#  include <libusb.h>
-# endif
+# include <libusb.h>
 #else
-# if defined(HAVE_USB_H)
-#  include <usb.h>
-# elif defined(HAVE_LUSB0_USB_H)
-#  include <lusb0_usb.h>
-# else
-#  error "libusb needs either <usb.h> or <lusb0_usb.h>"
-# endif
+# include <usb.h>
 #endif
 
 #ifdef USE_LIBUSB_1_0

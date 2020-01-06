@@ -3,15 +3,11 @@
 // configuration for amd linux
 // Raspberry Pi
 
-#define HAVE_LIBFTDI 1
-#define HAVE_LIBFTDI_TYPE_232H 1
-#define HAVE_LINUX_SPI_SPIDEV_H 1
-#define HAVE_SPIDEV 1
+#define HAVE_LINUX_SPI_SPIDEV_H
+#define HAVE_SPIDEV
 
 #undef HAVE_GETADDRINFO
-#undef HAVE_LIBFTDI1
-#undef HAVE_LIBHIDAPI
-#undef HAVE_LIBWS2_32
 #undef HAVE_NETINET_IN_H
+// we have linux/parport.h but raspberry pi have no native parallel port
 #undef HAVE_PARPORT
 

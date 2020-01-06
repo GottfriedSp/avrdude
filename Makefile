@@ -23,48 +23,15 @@ LDFLAGS      =
 #zusaetzliche Ausgabe Datei *.output -v
 YFLAGS       = -t -v
 
-LIBELF     = -lelf
-LIBFTDI    = -lftdi -lusb
-LIBFTDI1   = -lftdi1
-LIBHID     =
-LIBHIDAPI  =
-LIBUSB     = -lusb
-LIBUSB_1_0 = -lusb-1.0
-LIBPTHREAD = -lpthread
-LIPO =
 LEXLIB = -lfl
 
-ifdef HAVE_LIBELF
-LIBS += $(LIBELF)
-endif
-ifdef HAVE_LIBFTDI
-LIBS += $(LIBFTDI)
-endif
-ifdef HAVE_LIBFTDI1
-LIBS += $(LIBFTDI1)
-endif
-ifdef HAVE_LIBUSB
-LIBS += $(LIBUSB)
-endif
-ifdef HAVE_LIBUSB_1_0
-LIBS += $(LIBUSB_1_0)
-endif
-ifdef HAVE_LIBPTHREAD
-LIBS += $(LIBPTHREAD)
-endif
-
-LIBS += $(LEXLIB) -lm
+LIBS     += $(LEXLIB) $(PLATFORM_LIBS) -lm
+CFLAGS   += $(PLATFORM_CXXFLAGS) $(PLATFORM_INCLUDES)
+CXXFLAGS += $(PLATFORM_CXXFLAGS) $(PLATFORM_INCLUDES)
 
 ifdef COMSPEC
 # Windows
-CFLAGS   += -DWIN32NATIVE
-CXXFLAGS += -DWIN32NATIVE
 EXT   = .exe
-LIBS  += -lws2_32 -lhidapi
-MAKE_WINDOWS_LOADDRV = windows
-else
-# linux
-#LIBS  += -lreadline
 endif
 
 
@@ -94,7 +61,7 @@ OBJ_FILES = $(BISON_OBJ_FILES) $(OBJS)
 
 LINK_OBJECTS = main.o
 
-all: printlibs depend $(TARGET) $(MAKE_WINDOWS_LOADDRV)
+all: printlibs depend $(TARGET)
 
 .PHONY: windows doc .depend
 

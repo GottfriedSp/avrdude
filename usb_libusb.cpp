@@ -34,13 +34,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 
-#if defined(HAVE_USB_H)
-#  include <usb.h>
-#elif defined(HAVE_LUSB0_USB_H)
-#  include <lusb0_usb.h>
-#else
-#  error "libusb needs either <usb.h> or <lusb0_usb.h>"
-#endif
+#include <usb.h>
 
 #include "avrdude.h"
 #include "libavrdude.h"

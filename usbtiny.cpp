@@ -39,13 +39,7 @@
 #include "usbdevs.h"
 
 #if defined(HAVE_LIBUSB)      // we use LIBUSB to talk to the board
-#if defined(HAVE_USB_H)
-#  include <usb.h>
-#elif defined(HAVE_LUSB0_USB_H)
-#  include <lusb0_usb.h>
-#else
-#  error "libusb needs either <usb.h> or <lusb0_usb.h>"
-#endif
+#include <usb.h>
 
 #include "tpi.h"
 
@@ -60,15 +54,8 @@
 #  define LITTLE_TO_BIG_16(x) ((((x) << 8) & 0xFF00) | (((x) >> 8) & 0x00FF))
 #endif
 
-#ifndef HAVE_UINT_T
-typedef	unsigned int	uint_t;
-#endif
-#ifndef HAVE_ULONG_T
-typedef	unsigned long	ulong_t;
-#endif
-
 extern int avr_write_byte_default ( PROGRAMMER* pgm, AVRPART* p,
-				    AVRMEM* mem, ulong_t addr,
+				    AVRMEM* mem, unsigned long addr,
 				    unsigned char data );
 /*
  * Private data for this programmer.

@@ -45,10 +45,6 @@ int avrdude_message(const int msglvl, const char *format, ...);
 extern "C" {
 #endif
 
-#if !defined(HAVE_USLEEP)
-int usleep(unsigned int us);
-#endif
-
 #if !defined(HAVE_GETTIMEOFDAY)
 struct timezone;
 int gettimeofday(struct timeval *tv, struct timezone *tz);
