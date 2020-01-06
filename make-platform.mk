@@ -14,13 +14,13 @@ HAVE_LIBFTDI1   := $(and $(wildcard $(PLATFORMLIBPATH)/libftdi1.a),1)
 HAVE_LIBUSB     := $(and $(wildcard $(PLATFORMLIBPATH)/libusb.dll.a),1)
 HAVE_LIBUSB_1_0 := $(and $(wildcard $(PLATFORMLIBPATH)/libusb-1.0.dll.a),1)
 HAVE_LIBPTHREAD := $(and $(wildcard $(PLATFORMLIBPATH)/libpthread.a),1)
-HAVE_HID        := $(and $(wildcard $(PLATFORMLIBPATH)/libhid.dll.a),1)
-HAVE_HIDAPI     := $(and $(wildcard $(PLATFORMLIBPATH)/libhidapi.dll.a),1)
-HAVE_READLINE   := $(and $(wildcard $(PLATFORMLIBPATH)/libreadline.a),1)
+HAVE_LIBHID     := $(and $(wildcard $(PLATFORMLIBPATH)/libhid.dll.a),1)
+HAVE_LIBHIDAPI  := $(and $(wildcard $(PLATFORMLIBPATH)/libhidapi.dll.a),1)
+HAVE_LIBREADLINE:= $(and $(wildcard $(PLATFORMLIBPATH)/libreadline.a),1)
 
-HAVE_WS2_32     := $(and $(wildcard $(PLATFORM_CYGWINLIBROOTWIN)/libws3_32.a),1) 
+HAVE_LIBWS2_32  := $(and $(wildcard $(PLATFORM_CYGWINLIBROOTWIN)/libws2_32.a),1) 
 
-ifdef HAVE_WS2_32
+ifdef HAVE_LIBWS2_32
 PLATFORM_LIBS     += -lws2_32
 PLATFORM_CXXFLAGS += -DHAVE_LIBWS2_32
 endif
@@ -44,9 +44,9 @@ HAVE_LIBFTDI1   := $(shell /sbin/ldconfig -p |grep libftdi1.so      | awk '{spli
 #HAVE_LIBUSB     := $(shell /sbin/ldconfig -p |grep libusb.so       | awk '{split($$1,a,"-");print a[1]}' )
 HAVE_LIBUSB_1_0 := $(shell /sbin/ldconfig -p |grep libusb-1.0.so    | awk '{split($$1,a,"-");print a[1]}' )
 HAVE_LIBPTHREAD := $(shell /sbin/ldconfig -p |grep libpthread.so    | awk '{split($$1,a,"-");print a[1]}' )
-HAVE_HID        := $(shell /sbin/ldconfig -p |grep libhid.so        | awk '{split($$1,a,"-");print a[1]}' )
-HAVE_HIDAPI     := $(shell /sbin/ldconfig -p |grep libhidapi.so     | awk '{split($$1,a,"-");print a[1]}' )
-HAVE_READLINE   := $(shell /sbin/ldconfig -p |grep libreadline.so   | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_LIBHID     := $(shell /sbin/ldconfig -p |grep libhid.so        | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_LIBHIDAPI  := $(shell /sbin/ldconfig -p |grep libhidapi.so     | awk '{split($$1,a,"-");print a[1]}' )
+HAVE_LIBREADLINE:= $(shell /sbin/ldconfig -p |grep libreadline.so   | awk '{split($$1,a,"-");print a[1]}' )
 
 PLATFORM_CXXFLAGS += -DHAVE_LINUXGPIO
 
@@ -71,16 +71,16 @@ endif
 ifdef HAVE_LIBUSB_1_0
 PLATFORM_LIBS += -lusb-1.0
 endif
-ifdef HAVE_HID
+ifdef HAVE_LIBHID
 PLATFORM_LIBS += -lhid
 endif
-ifdef HAVE_HIDAPI
+ifdef HAVE_LIBHIDAPI
 PLATFORM_LIBS += -lhidapi
 endif
 ifdef HAVE_LIBPTHREAD
 PLATFORM_LIBS += -lpthread
 endif
-ifdef HAVE_READLINE
+ifdef HAVE_LIBREADLINE
 PLATFORM_LIBS  += -lreadline
 endif
 
@@ -102,16 +102,16 @@ endif
 ifdef HAVE_LIBUSB_1_0
 PLATFORM_CXXFLAGS += -DHAVE_LIBUSB_1_0
 endif
-ifdef HAVE_HID
+ifdef HAVE_LIBHID
 PLATFORM_CXXFLAGS += -DHAVE_LIBHID
 endif
-ifdef HAVE_HIDAPI
+ifdef HAVE_LIBHIDAPI
 PLATFORM_CXXFLAGS += -DHAVE_LIBHIDAPI
 endif
 ifdef HAVE_LIBPTHREAD
 PLATFORM_CXXFLAGS += -DHAVE_LIBPTHREAD
 endif
-ifdef HAVE_READLINE
+ifdef HAVE_LIBREADLINE
 PLATFORM_CXXFLAGS += -DHAVE_LIBREADLINE
 endif
 

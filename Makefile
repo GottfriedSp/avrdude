@@ -141,6 +141,10 @@ printlibs:
 	@echo "HAVE_LIBUSB     = $(HAVE_LIBUSB)"
 	@echo "HAVE_LIBUSB_1_0 = $(HAVE_LIBUSB_1_0)"
 	@echo "HAVE_LIBPTHREAD = $(HAVE_LIBPTHREAD)"
+	@echo "HAVE_LIBHID     = $(HAVE_LIBHID)"
+	@echo "HAVE_LIBHIDAPI  = $(HAVE_LIBHIDAPI)"
+	@echo "HAVE_LIBREADLINE= $(HAVE_LIBREADLINE)"
+	@echo "HAVE_LIBWS2_32  = $(HAVE_LIBWS2_32)"
 
 
 depend: config_gram.tab.cpp config_gram.y lexer.flex.cpp lexer.l
