@@ -5,42 +5,32 @@ The latest version of AVRDUDE is always available here:
   http://savannah.nongnu.org/projects/avrdude
 
 
-Important environment variables for ./configure:
+Install packages for build avrdude
 ================================================
 
-CPPFLAGS: C preprocessor flags (*not* "C++")
+For Debian or Raspberry Pi run the install script in tool folder
+> tools/install_build_debian.sh
 
-This is the place to put additional (non-standard) -I options into.
-For example, if your Windows system has LibUSB-Win32 installed into
-\\WINDOWS\ProgramFiles\LibUSB-Win32, use
-
-CPPFLAGS=-I/WINDOWS/ProgramFiles/LibUSB-Win32/include
-
-to tell configure where to search for the header files.  (The use of
-forward slashes rather than backslashes can often simplify things.
-Note that the Windows system services internally treat both the same.
-It's only cmd.exe which requires backslashes as the directory
-separator.)
-
-LDFLAGS: Linker options
-
-This is the place to make additional library locations known to the
-linker.  To continue the above example, use
-
-LDFLAGS=-L/WINDOWS/ProgramFiles/LibUSB-Win32/lib/gcc
-
-to make the linker search for "libusb.a" in that directory.
+For windows you have to install Cygwin or Cygwin64 (MinGW or MSys not tested)
+You must install these packages with Cygwin package manager:
+  libftdi1-devel libelf-devel libhidapi-devel libusb-devel libusb1.0-devel libreadline-devel
+  libtool texi2html texinfo-tex
 
 
-Linux users: make sure the header files are installed
+Build avrdude
 =====================================================
 
-While many Linux distributions install the libraries needed by AVRDUDE
-(libusb, libelf) by default, they leave out the corresponding header
-files.  Consequently, the configure script won't find them, so these
-libraries could not be used.
+Windows users starts the Cygwin64 Terminal
+Linux users starts a shell (bash, dash, whatever...)
+The character ">" is the command prompt
 
-Usually, the packages with the header files (and static libraries) are
-derived from the regular package name by appending "-devel".  Thus,
-make sure you have "libusb-devel" and "libelf-devel" installed before
-running the configure script.  (Same goes for libftdi.)
+> make
+
+do build with documents:
+> make all doc
+
+To clean up
+> make clean
+
+To rebuild all
+> make clean all doc
