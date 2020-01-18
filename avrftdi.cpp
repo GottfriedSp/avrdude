@@ -363,7 +363,7 @@ static int avrftdi_transmit_bb(PROGRAMMER * pgm, unsigned char mode, const unsig
 		// (8*2) outputs per data byte, 6 transmit bytes per output (SET_BITS_LOW/HIGH),
 		// (8*1) inputs per data byte,  2 transmit bytes per input  (GET_BITS_LOW/HIGH),
 		// 1x SEND_IMMEDIATE
-		unsigned char send_buffer[(8*2*6)*transfer_size+(8*1*2)*transfer_size+7];
+		unsigned char *send_buffer = static_cast<unsigned char*>(malloc((8*2*6)*transfer_size+(8*1*2)*transfer_size+7));
 		int len = 0;
 		int i;
 
@@ -383,7 +383,7 @@ static int avrftdi_transmit_bb(PROGRAMMER * pgm, unsigned char mode, const unsig
 
 		E(ftdi_write_data(pdata->ftdic, send_buffer, len) != len, pdata->ftdic);
 		if (mode & MPSSE_DO_READ) {
-		    unsigned char recv_buffer[2*16*transfer_size];
+		    unsigned char *recv_buffer = static_cast<unsigned char*>(malloc(2*16*transfer_size));
 			int n;
 			int k = 0;
 			do {
@@ -395,10 +395,12 @@ static int avrftdi_transmit_bb(PROGRAMMER * pgm, unsigned char mode, const unsig
 			for(i = 0 ; i< transfer_size; i++) {
 			    data[written + i] = extract_data(pgm, recv_buffer, i);
 			}
+      free(recv_buffer);
 		}
 
 		written += transfer_size;
 		remaining -= transfer_size;
+    free(send_buffer);
 	}
 
 	return written;
@@ -949,7 +951,8 @@ static int avrftdi_eeprom_read(PROGRAMMER *pgm, AVRPART *p, AVRMEM *m,
 		unsigned int page_size, unsigned int addr, unsigned int len)
 {
 	unsigned char cmd[4];
-	unsigned char buffer[len], *bufptr = buffer;
+	unsigned char *buffer = static_cast<unsigned char*>(malloc(len));
+  unsigned char *bufptr = buffer;
 	unsigned int add;
 
 	memset(buffer, 0, sizeof(buffer));
@@ -960,12 +963,16 @@ static int avrftdi_eeprom_read(PROGRAMMER *pgm, AVRPART *p, AVRMEM *m,
 		avr_set_addr(m->op[AVR_OP_READ], cmd, add);
 
 		if (0 > avrftdi_transmit(pgm, MPSSE_DO_READ | MPSSE_DO_WRITE, cmd, cmd, 4))
+    {
+      free(buffer);
 			return -1;
+    }
 
 		avr_get_output(m->op[AVR_OP_READ], cmd, bufptr++);
 	}
 
 	memcpy(m->buf + addr, buffer, len);
+  free(buffer);
 	return len;
 }
 
@@ -980,17 +987,20 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
 	unsigned char poll_byte;
 	unsigned char *buffer = &m->buf[addr];
-	unsigned char buf[4*len+4], *bufptr = buf;
+	unsigned char *buf = static_cast<unsigned char*>(malloc(4*len+4));
+  unsigned char *bufptr = buf;
 
 	memset(buf, 0, sizeof(buf));
 
 	/* pre-check opcodes */
 	if (m->op[AVR_OP_LOADPAGE_LO] == NULL) {
 		log_err("AVR_OP_LOADPAGE_LO command not defined for %s\n", p->desc);
+    free(buf);
 		return -1;
 	}
 	if (m->op[AVR_OP_LOADPAGE_HI] == NULL) {
 		log_err("AVR_OP_LOADPAGE_HI command not defined for %s\n", p->desc);
+    free(buf);
 		return -1;
 	}
 
@@ -1011,7 +1021,10 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	 */
 	if(use_lext_address && (((addr/2) & 0xffff0000))) {
 		if (0 > avrftdi_lext(pgm, p, m, addr/2))
+    {
+      free(buf);
 			return -1;
+	}
 	}
 
 	/* prepare the command stream for the whole page */
@@ -1036,6 +1049,7 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	/* issue write page command, if available */
 	if (m->op[AVR_OP_WRITEPAGE] == NULL) {
 		log_err("AVR_OP_WRITEPAGE command not defined for %s\n", p->desc);
+    free(buf);
 		return -1;
 	} else {
 		avr_set_bits(m->op[AVR_OP_WRITEPAGE], bufptr);
@@ -1052,7 +1066,10 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
 	log_info("Transmitting buffer of size: %d\n", buf_size);
 	if (0 > avrftdi_transmit(pgm, MPSSE_DO_WRITE, buf, buf, buf_size))
+  {
+    free(buf);
 		return -1;
+  }
 
 	bufptr = buf;
 	/* find a poll byte. we cannot poll a value of 0xff, so look
@@ -1085,6 +1102,7 @@ static int avrftdi_flash_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 		usleep((m->max_write_delay));
 	}
 
+  free(buf);
 	return len;
 }
 
@@ -1099,8 +1117,8 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	int use_lext_address = m->op[AVR_OP_LOAD_EXT_ADDR] != NULL;
 	unsigned int address = addr/2;
 
-	unsigned char o_buf[4*len+4];
-	unsigned char i_buf[4*len+4];
+	unsigned char *o_buf = static_cast<unsigned char*>(malloc(4*len+4));
+	unsigned char *i_buf = static_cast<unsigned char*>(malloc(4*len+4));
 	unsigned int index;
 
 
@@ -1110,16 +1128,24 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	/* pre-check opcodes */
 	if (m->op[AVR_OP_READ_LO] == NULL) {
 		log_err("AVR_OP_READ_LO command not defined for %s\n", p->desc);
+    free(o_buf);
+    free(i_buf);
 		return -1;
 	}
 	if (m->op[AVR_OP_READ_HI] == NULL) {
 		log_err("AVR_OP_READ_HI command not defined for %s\n", p->desc);
+    free(o_buf);
+    free(i_buf);
 		return -1;
 	}
 
 	if(use_lext_address && ((address & 0xffff0000))) {
 		if (0 > avrftdi_lext(pgm, p, m, address))
+    {
+      free(o_buf);
+      free(i_buf);
 			return -1;
+	}
 	}
 
 	/* word addressing! */
@@ -1145,7 +1171,11 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	}
 
 	if (0 > avrftdi_transmit(pgm, MPSSE_DO_READ | MPSSE_DO_WRITE, o_buf, i_buf, len * 4))
+  {
+    free(o_buf);
+    free(i_buf);
 		return -1;
+  }
 
 	if(verbose > TRACE) {
 		buf_dump(i_buf, sizeof(i_buf), "i_buf", 0, 32);
@@ -1169,6 +1199,8 @@ static int avrftdi_flash_read(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 	if(verbose > TRACE)
 		buf_dump(&m->buf[addr], page_size, "page:", 0, 32);
 
+  free(o_buf);
+  free(i_buf);
 	return len;
 }
 

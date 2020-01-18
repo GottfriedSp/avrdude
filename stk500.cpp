@@ -758,7 +758,7 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
                               unsigned int page_size,
                               unsigned int addr, unsigned int n_bytes)
 {
-  unsigned char buf[page_size + 16];
+  unsigned char *buf = static_cast<unsigned char*>(malloc(page_size + 16));
   int memtype;
   int a_div;
   int block_size;
@@ -773,6 +773,7 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     memtype = 'E';
   }
   else {
+    free(buf);
     return -2;
   }
 
@@ -818,34 +819,47 @@ static int stk500_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     stk500_send( pgm, buf, i);
 
     if (stk500_recv(pgm, buf, 1) < 0)
+    {
+      free(buf);
       return -1;
+    }
     if (buf[0] == Resp_STK_NOSYNC) {
       if (tries > 33) {
         avrdude_message(MSG_INFO, "\n%s: stk500_paged_write(): can't get into sync\n",
                 progname);
+        free(buf);
         return -3;
       }
       if (stk500_getsync(pgm) < 0)
+      {
+        free(buf);
 	return -1;
+      }
       goto retry;
     }
     else if (buf[0] != Resp_STK_INSYNC) {
       avrdude_message(MSG_INFO, "\n%s: stk500_paged_write(): (a) protocol error, "
                       "expect=0x%02x, resp=0x%02x\n",
                       progname, Resp_STK_INSYNC, buf[0]);
+      free(buf);
       return -4;
     }
 
     if (stk500_recv(pgm, buf, 1) < 0)
+    {
+      free(buf);
       return -1;
+    }
     if (buf[0] != Resp_STK_OK) {
       avrdude_message(MSG_INFO, "\n%s: stk500_paged_write(): (a) protocol error, "
                       "expect=0x%02x, resp=0x%02x\n",
                       progname, Resp_STK_INSYNC, buf[0]);
+      free(buf);
       return -5;
     }
   }
 
+  free(buf);
   return n_bytes;
 }
 
