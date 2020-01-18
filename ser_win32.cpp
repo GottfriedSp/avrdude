@@ -31,10 +31,12 @@
 #  include <winsock2.h>
 #endif
 
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
 #include <ctype.h>   /* for isprint */
 #include <errno.h>   /* ENOTTY */
+#include <stdlib.h>  /* strtoul exit */
 
 #include "avrdude.h"
 #include "libavrdude.h"
@@ -253,7 +255,7 @@ static int ser_open(char * port, union pinfo pinfo, union filedescriptor *fdp)
 	    port = newname;
 	}
 
-	hComPort = CreateFile(port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+	hComPort = CreateFileA(port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (hComPort == INVALID_HANDLE_VALUE) {
@@ -682,14 +684,14 @@ static int ser_drain(union filedescriptor *fd, int display)
 
 struct serial_device serial_serdev =
 {
-  .open = ser_open,
-  .setspeed = ser_setspeed,
-  .close = ser_close,
-  .send = ser_send,
-  .recv = ser_recv,
-  .drain = ser_drain,
-  .set_dtr_rts = ser_set_dtr_rts,
-  .flags = SERDEV_FL_CANSETSPEED,
+  /*.open         =*/ ser_open,
+  /*.setspeed     =*/ ser_setspeed,
+  /*.close        =*/ ser_close,
+  /*.send         =*/ ser_send,
+  /*.recv         =*/ ser_recv,
+  /*.drain        =*/ ser_drain,
+  /*.set_dtr_rts  =*/ ser_set_dtr_rts,
+  /*.flags        =*/ SERDEV_FL_CANSETSPEED,
 };
 
 struct serial_device *serdev = &serial_serdev;

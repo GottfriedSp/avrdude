@@ -1598,7 +1598,7 @@ static void stk500v2_enable(PROGRAMMER * pgm)
 
 static int stk500v2_open(PROGRAMMER * pgm, char * port)
 {
-  union pinfo pinfo = { .baud = 115200 };
+  union pinfo pinfo = { /*.baud =*/ 115200 };
 
   DEBUG("STK500V2: stk500v2_open()\n");
 
@@ -1666,7 +1666,7 @@ static int stk500v2_open(PROGRAMMER * pgm, char * port)
 
 static int stk600_open(PROGRAMMER * pgm, char * port)
 {
-  union pinfo pinfo = { .baud = 115200 };
+  union pinfo pinfo = { /*.baud =*/ 115200 };
 
   DEBUG("STK500V2: stk600_open()\n");
 

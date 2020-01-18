@@ -501,23 +501,23 @@ static int buspirate_start_mode_bin(struct programmer_t *pgm)
 
   const struct submode submodule_raw =
   {
-    .name = "Raw-wire",
-    .enter = 0x05,
-    .entered_format = "RAW%1d",
-    .config = static_cast<char>(0x8C),
+    /*.name           =*/ "Raw-wire",
+    /*.enter          =*/ 0x05,
+    /*.entered_format =*/ "RAW%1d",
+    /*.config         =*/ static_cast<char>(0x8C),
   };
   const struct submode submodule_spi =
   {
-    .name = "SPI",
-    .enter = 0x01,
-    .entered_format = "SPI%1d",
+    /*.name           =*/ "SPI",
+    /*.enter          =*/ 0x01,
+    /*.entered_format =*/ "SPI%1d",
 
     /* 1000wxyz - SPI config, w=HiZ(0)/3.3v(1), x=CLK idle, y=CLK edge, z=SMP sample
      * we want: 3.3V(1), idle low(0), data change on
      *          trailing edge (1), sample in the middle
      *          of the pulse (0)
      *       => 0b10001010 = 0x8a */
-    .config = static_cast<char>(0x8A),
+    /*.config         =*/ static_cast<char>(0x8A),
   };
 
 	if (pgm->flag & BP_FLAG_XPARM_RAWFREQ) {
