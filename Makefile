@@ -151,5 +151,7 @@ depend: config_gram.tab.cpp config_gram.y lexer.flex.cpp lexer.l
 	@if [ ! -f config_gram.tab.h ]; then touch config_gram.tab.h; fi
 	${CXX} ${CXXFLAGS} -MM ${SRCS} > .depend
 
-
-include .depend
+#
+# include .depend if it exists
+#
+-include .depend
