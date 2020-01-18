@@ -151,7 +151,7 @@ static int winnt_pp_open(void)
     }
     else if(ver_info.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
-        HANDLE h = CreateFile(DRIVERNAME,
+        HANDLE h = CreateFileA(DRIVERNAME,
             GENERIC_READ,
             0,
             NULL,
@@ -317,9 +317,12 @@ static unsigned char inb(unsigned short port)
 {
     unsigned char t;
 
+  // TODO: does not work with msvc
+#ifndef _MSC_VER
 	asm volatile ("in %1, %0"
         : "=a" (t)
         : "d" (port));
+#endif
 
 	return t;
 }
@@ -328,11 +331,12 @@ static unsigned char inb(unsigned short port)
 /* Write value to port. */
 static void outb(unsigned char value, unsigned short port)
 {
+  // TODO: does not work with msvc
+#ifndef _MSC_VER
     asm volatile ("out %1, %0"
         :
         : "d" (port), "a" (value) );
-
-    return;
+#endif
 }
 
 #if !defined(HAVE_GETTIMEOFDAY)
