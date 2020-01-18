@@ -144,7 +144,7 @@ static void update_progress_tty (int percent, double etime, char *hdr)
   static int last = 0;
   int i;
 
-  setvbuf(stderr, (char*)NULL, _IONBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
 
   hashes[50] = 0;
 
@@ -169,7 +169,7 @@ static void update_progress_tty (int percent, double etime, char *hdr)
     last = 1;
   }
 
-  setvbuf(stderr, (char*)NULL, _IOLBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
 }
 
 static void update_progress_no_tty (int percent, double etime, char *hdr)
@@ -178,7 +178,7 @@ static void update_progress_no_tty (int percent, double etime, char *hdr)
   static int last = 0;
   int cnt = (percent>>1)*2;
 
-  setvbuf(stderr, (char*)NULL, _IONBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
 
   if (hdr) {
     avrdude_message(MSG_INFO, "\n%s | ", hdr);
@@ -200,7 +200,7 @@ static void update_progress_no_tty (int percent, double etime, char *hdr)
   else
     last = (percent>>1)*2;    /* Make last a multiple of 2. */
 
-  setvbuf(stderr, (char*)NULL, _IOLBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
 }
 
 static void list_programmers_callback(const char *name, const char *desc,
@@ -356,8 +356,8 @@ int main(int argc, char * argv [])
    * Set line buffering for file descriptors so we see stdout and stderr
    * properly interleaved.
    */
-  setvbuf(stdout, (char*)NULL, _IOLBF, 0);
-  setvbuf(stderr, (char*)NULL, _IOLBF, 0);
+  setvbuf(stdout, NULL, _IONBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
 
   progname = strrchr(argv[0],'/');
 
