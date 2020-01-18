@@ -39,6 +39,7 @@ int avrdude_message(const int msglvl, const char *format, ...);
 #if defined(WIN32NATIVE)
 
 #include "portable/arch.h"
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #ifdef __cplusplus
