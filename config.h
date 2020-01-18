@@ -45,6 +45,10 @@ typedef struct token_t {
 typedef struct token_t *token_p;
 
 
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+
 extern FILE       * yyin;
 extern PROGRAMMER * current_prog;
 extern AVRPART    * current_part;
@@ -58,9 +62,6 @@ extern LISTID       number_list;
 extern char string_buf[MAX_STR_CONST];
 extern char *string_buf_ptr;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #if !defined(HAS_YYSTYPE)
 #define YYSTYPE token_p
@@ -95,8 +96,8 @@ void pyytext(void);
 
 char * dup_string(const char * str);
 
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 
 #endif
